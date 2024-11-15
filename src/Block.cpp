@@ -1,12 +1,6 @@
 #include <Block.hpp>
 #include <raylib.h>
-#include <Colors.hpp>
 #include <GameUtils.hpp>
-
-Block::Block()
-{
-    m_colorIndex = 3;
-}
 
 void Block::changeState(bool clockWise)
 {
@@ -16,16 +10,25 @@ void Block::changeState(bool clockWise)
 
 void Block::drawBlock()
 {
-    auto& currentLayer = getCurrentLayer();
+    auto currentLayer = getCurrentLayer();
     for (auto& cube : currentLayer)
     {
-        Utils::drawTile(m_offsetX + cube.posX, m_offsetY + cube.posY, getBlockColor(m_colorIndex));
+        if (cube.posY < Utils::Config::numOfInvRows)
+            return;
+            
+        Utils::drawTile(cube.posX, cube.posY, getBlockColor(m_colorIndex));
     }
 }
 
-const std::array<Block::position, 4>& Block::getCurrentLayer() const
+const std::array<Block::position, 4> Block::getCurrentLayer() const
 {
-    return m_positions[m_state];
+    auto absPositions = m_positions[m_state];
+    for (auto& cube : absPositions)
+    {
+        cube.posX += m_offsetX;
+        cube.posY += m_offsetY;
+    }
+    return absPositions;
 }
 
 const std::array<Block::position, 4>& Block::getPrevLayer()

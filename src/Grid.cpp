@@ -2,55 +2,51 @@
 #include <raylib.h>
 #include <iostream>
 #include <Block.hpp>
-#include <Colors.hpp>
 #include <GameUtils.hpp>
 
 void Grid::draw()
 {
-    for (int i = 0; i < Utils::Config::numOfRows; i++)
+    for (int i = Utils::Config::numOfInvRows; i < Utils::Config::numOfRows; i++)
     {
         for (int j = 0; j < Utils::Config::numOfCols; j++)
         {
-            int colorIndex = m_cubesGrid[i][j];
+            BlockID colorIndex = m_cubesGrid[i][j];
             Utils::drawTile(j, i, getBlockColor(colorIndex));
         }
     }
     
 }
 
-void Grid::addCube(int posX, int posY, int color)
+void Grid::addCube(int posX, int posY, BlockID color)
 {
     m_cubesGrid[posY][posX] = color;
 }
 
 void Grid::removeCube(int posX, int posY)
 {
-    m_cubesGrid[posY][posX] = 0;
+    m_cubesGrid[posY][posX] = BlockID::EMPTY_CELL;
 }
 
 void Grid::addBlock(const Block& block)
 {
-    auto& positions = block.getCurrentLayer();
+    auto positions = block.getCurrentLayer();
 
     for (auto& position : positions)
     {
-        addCube(position.posX + block.m_offsetX, position.posY + block.m_offsetY, block.m_colorIndex);
+        addCube(position.posX, position.posY, block.m_colorIndex);
     }
 }
 
 bool Grid::isCollisionY(const Block& block)
 {
-    auto& positions = block.getCurrentLayer();
+    auto positions = block.getCurrentLayer();
 
     for (auto& position : positions)
     {
-        int posX = position.posX + block.m_offsetX;
-        int posY = position.posY + block.m_offsetY + 1;
-
-        if (posY == Utils::Config::numOfRows)
+        if (position.posY + 1 == Utils::Config::numOfRows)
             return true;
         
-        if (m_cubesGrid[posY][posX])
+        if (m_cubesGrid[position.posY + 1][position.posX])
             return true;
     }
 
@@ -59,17 +55,14 @@ bool Grid::isCollisionY(const Block& block)
 
 bool Grid::isCollisionXLeft(const Block& block)
 {
-    auto& positions = block.getCurrentLayer();
+    auto positions = block.getCurrentLayer();
 
     for (auto& position : positions)
     {
-        int posX = position.posX + block.m_offsetX - 1;
-        int posY = position.posY + block.m_offsetY;
-
-        if (posX < 0 )
+        if ((position.posX - 1) < 0 )
             return true;
         
-        if (m_cubesGrid[posY][posX])
+        if (m_cubesGrid[position.posY][position.posX - 1])
             return true;
     }
     return false;
@@ -77,17 +70,14 @@ bool Grid::isCollisionXLeft(const Block& block)
 
 bool Grid::isCollisionXRight(const Block& block)
 {
-    auto& positions = block.getCurrentLayer();
+    auto positions = block.getCurrentLayer();
 
     for (auto& position : positions)
     {
-        int posX = position.posX + block.m_offsetX + 1;
-        int posY = position.posY + block.m_offsetY;
-
-        if (posX >= Utils::Config::numOfCols)
+        if ((position.posX + 1) >= Utils::Config::numOfCols)
             return true;
         
-        if (m_cubesGrid[posY][posX])
+        if (m_cubesGrid[position.posY][position.posX + 1])
             return true;
     }
     return false;
@@ -126,4 +116,16 @@ void Grid::handleFullRows()
 bool Grid::isCubeAt(int posY, int posX)
 {
     return m_cubesGrid[posY][posX];
+}
+
+bool Grid::isGameOver(const Block& block)
+{
+    auto positions = block.getCurrentLayer();
+
+    for (auto& position : positions)
+    {
+        if (m_cubesGrid[position.posY][position.posX])
+            return true;
+    }
+    return false;
 }

@@ -2,6 +2,7 @@
 
 #include <array>
 #include <vector>
+#include "Colors.hpp"
 
 class Grid;
 
@@ -12,7 +13,6 @@ friend class Grid;
 
 public:
 
-    Block();
     virtual ~Block() = default;
 
     struct position {
@@ -36,7 +36,7 @@ public:
 
 public:
 
-    int m_colorIndex;
+    BlockID m_colorIndex;
 
 protected:
 
@@ -45,7 +45,7 @@ protected:
     std::vector<std::array<position, 4>> m_positions;
 
 private:
-    const std::array<position, 4>& getCurrentLayer() const;
+    const std::array<position, 4> getCurrentLayer() const;
     int m_state = 0;
 
 };

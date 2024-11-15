@@ -1,5 +1,6 @@
 #include "Game.hpp"
 #include <cstdlib>
+#include <iostream>
 
 void Game::handleBlockMoveX()
 {
@@ -8,14 +9,14 @@ void Game::handleBlockMoveX()
     if (IsKeyPressed(KEY_LEFT))
     {
         blockMoveLeft();
-        nextKeyUpdate = 0.2f;
+        nextKeyUpdate = 0.15f;
     }
     else if (IsKeyDown(KEY_LEFT))
     {
         if (nextKeyUpdate <= 0.0f)
         {
             blockMoveLeft();
-            nextKeyUpdate = 0.05f;
+            nextKeyUpdate = 0.005f;
         }
         else
         {
@@ -25,14 +26,14 @@ void Game::handleBlockMoveX()
     else if (IsKeyPressed(KEY_RIGHT))
     {
         blockMoveRight();
-        nextKeyUpdate = 0.2f;
+        nextKeyUpdate = 0.15f;
     }
     else if (IsKeyDown(KEY_RIGHT))
     {
         if (nextKeyUpdate <= 0.0f)
         {
             blockMoveRight();
-            nextKeyUpdate = 0.05f;
+            nextKeyUpdate = 0.005f;
         }
         else
         {
@@ -77,22 +78,20 @@ void Game::handleRotate()
 
 void Game::handleKeyboardEvents()
 {
-
     handleBlockMoveX();
-
-    if (IsKeyDown(KEY_DOWN))
-    {
-        m_block->moveY();
-    }
 }
 
 void Game::handleCollisionY()
 {
-        if (m_grid.isCollisionY(*m_block))
+    if (m_grid.isCollisionY(*m_block))
+    {
+        m_grid.addBlock(*m_block);
+        getNewBlock();
+        if (m_grid.isGameOver(*m_block))
         {
-            m_grid.addBlock(*m_block);
-            getNewBlock();
+            m_isGameOver = true;
         }
+    }
 }
 
 void Game::drawGame()
@@ -104,11 +103,21 @@ void Game::drawGame()
 
 void Game::GameLoop()
 {
-    handleCollisionY();
-    m_grid.handleFullRows();
-    handleKeyboardEvents();
-    handleRotate();
-    drawGame();
+
+    if (m_isGameOver)
+    {
+        drawGame();
+        DrawText("GAME OVER!", 20, 20, 20, BLACK);
+    }
+    else
+    {
+        handleCollisionY();
+        m_grid.handleFullRows();
+        blockMoveDown();
+        handleKeyboardEvents();
+        handleRotate();
+        drawGame();
+    }
 }
 
 void Game::blockMoveLeft()
@@ -129,11 +138,48 @@ void Game::blockMoveRight()
 
 void Game::getNewBlock()
 {
-    int random = rand() % 3;
-    if (random == 0)
-        m_block = std::make_unique<TBlock>();
-    else if (random == 1)
-        m_block = std::make_unique<IBlock>();
+    int random = rand() % (BlockID::COUNT - 1) + 1;
+    BlockID randomBlockId = static_cast<BlockID>(random);
+
+    switch (randomBlockId)
+    {
+        case I_BLOCK:
+            m_block = std::make_unique<IBlock>();
+            break;
+        case O_BLOCK:
+            m_block = std::make_unique<OBlock>();
+            break;
+        case T_BLOCK:
+            m_block = std::make_unique<TBlock>();
+            break;
+        case L_BLOCK:
+            m_block = std::make_unique<LBlock>();
+            break;
+        case J_BLOCK:
+            m_block = std::make_unique<JBlock>();
+            break;
+        case S_BLOCK:
+            m_block = std::make_unique<SBlock>();
+            break;
+        case Z_BLOCK:
+            m_block = std::make_unique<ZBlock>();
+            break;
+        default:
+            break;
+    }
+}
+
+void Game::blockMoveDown()
+{
+    static float nextMoveDown = 0.1f;
+
+    if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
+    {
+        m_block->moveY();
+        nextMoveDown = 0.1f;
+    }
     else
-        m_block = std::make_unique<OBlock>();
+    {
+        nextMoveDown -= GetFrameTime();
+    }
 }

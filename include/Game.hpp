@@ -19,6 +19,8 @@ public:
     void handleRotate();
     bool canBlockRotate(bool clockWise);
     void getNewBlock();
+    void blockMoveDown();
+
 
     Game()
     {
@@ -29,4 +31,5 @@ public:
 private:
     Grid m_grid;
     std::unique_ptr<Block> m_block;
+    bool m_isGameOver = false;
 };
