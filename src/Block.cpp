@@ -13,7 +13,7 @@ void Block::changeState(bool clockWise)
 void Block::drawBlock(int pixelsDown)
 {
     auto currentLayer = getCurrentPositions();
-    for (auto& cube : currentLayer)
+    for (auto cube : currentLayer)
     {
         if (cube.posY < Utils::Config::numOfInvRows - 1) //Tile at invisible rows
         {

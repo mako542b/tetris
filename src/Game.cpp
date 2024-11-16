@@ -2,6 +2,31 @@
 #include <cstdlib>
 #include <iostream>
 
+void Game::GameLoop()
+{
+
+    if (m_isGameOver)
+    {
+        drawGame();
+        DrawText("GAME OVER!", 20, 20, 20, BLACK);
+
+        if (IsKeyDown(KEY_N))
+        {
+            m_grid = {};
+            m_isGameOver = false;
+        }
+    }
+    else
+    {
+        handleCollisionY();
+        clearFinishedRows();
+        blockMoveDown();
+        handleKeyboardEvents();
+        handleRotate();
+        drawGame();
+    }
+}
+
 void Game::handleBlockMoveX()
 {
     static float nextKeyUpdate = 0.2f;
@@ -97,37 +122,11 @@ void Game::drawGame()
     m_block->drawBlock(yPixelsDown);
 }
 
-
-void Game::GameLoop()
-{
-
-    if (m_isGameOver)
-    {
-        drawGame();
-        DrawText("GAME OVER!", 20, 20, 20, BLACK);
-
-        if (IsKeyDown(KEY_N))
-        {
-            m_grid = {};
-            m_isGameOver = false;
-        }
-    }
-    else
-    {
-        handleCollisionY();
-        clearFinishedRows();
-        blockMoveDown();
-        handleKeyboardEvents();
-        handleRotate();
-        drawGame();
-    }
-}
-
 void Game::blockMoveLeft()
 {
-    bool isRowAligned = yPixelsDown < 3;
+    bool isTileRowAligned = yPixelsDown < 3;
 
-    if (m_grid.isCollisionLeft(*m_block, isRowAligned))
+    if (m_grid.isCollisionLeft(*m_block, isTileRowAligned))
         return;
 
     m_block->moveLeft();
@@ -135,9 +134,9 @@ void Game::blockMoveLeft()
 
 void Game::blockMoveRight()
 {
-    bool isRowAligned = yPixelsDown < 3;
+    bool isTileRowAligned = yPixelsDown < 3;
 
-    if (m_grid.isCollisionRight(*m_block, isRowAligned))
+    if (m_grid.isCollisionRight(*m_block, isTileRowAligned))
         return;
 
     m_block->moveRight();
