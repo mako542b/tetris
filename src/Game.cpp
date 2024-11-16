@@ -44,17 +44,14 @@ void Game::handleBlockMoveX()
 
 bool Game::canBlockRotate(bool clockWise)
 {
-    auto& positions = clockWise ?  m_block->getNextLayer() : m_block->getPrevLayer();
+    auto positions = clockWise ?  m_block->getCWPositions() : m_block->getCCWPositions();
 
     for (auto& position : positions)
     {
-        int posX = position.posX + m_block->getOffsetX();
-        int posY = position.posY + m_block->getOffsetY();
-
-        if (posX >= Utils::Config::numOfCols || posX < 0 || posY < 0)
+        if (position.posX >= Utils::Config::numOfCols || position.posX < 0 || position.posY < 0)
             return false;
         
-        if (m_grid.isCubeAt(posY, posX))
+        if (m_grid.isTileAt(position.posY, position.posX))
             return false;
     }
     return true;
@@ -96,8 +93,8 @@ void Game::handleCollisionY()
 
 void Game::drawGame()
 {
-    m_grid.draw();
-    m_block->drawBlock();
+    m_grid.drawGrid();
+    m_block->drawBlock(yPixelsDown);
 }
 
 
@@ -108,11 +105,17 @@ void Game::GameLoop()
     {
         drawGame();
         DrawText("GAME OVER!", 20, 20, 20, BLACK);
+
+        if (IsKeyDown(KEY_N))
+        {
+            m_grid = {};
+            m_isGameOver = false;
+        }
     }
     else
     {
         handleCollisionY();
-        m_grid.handleFullRows();
+        clearFinishedRows();
         blockMoveDown();
         handleKeyboardEvents();
         handleRotate();
@@ -122,7 +125,9 @@ void Game::GameLoop()
 
 void Game::blockMoveLeft()
 {
-    if (m_grid.isCollisionXLeft(*m_block))
+    bool isRowAligned = yPixelsDown < 3;
+
+    if (m_grid.isCollisionLeft(*m_block, isRowAligned))
         return;
 
     m_block->moveLeft();
@@ -130,7 +135,9 @@ void Game::blockMoveLeft()
 
 void Game::blockMoveRight()
 {
-    if (m_grid.isCollisionXRight(*m_block))
+    bool isRowAligned = yPixelsDown < 3;
+
+    if (m_grid.isCollisionRight(*m_block, isRowAligned))
         return;
 
     m_block->moveRight();
@@ -171,15 +178,23 @@ void Game::getNewBlock()
 
 void Game::blockMoveDown()
 {
-    static float nextMoveDown = 0.1f;
+    const float interval = (float) 1;
+    static float nextMoveDown = interval;
 
     if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
     {
         m_block->moveY();
-        nextMoveDown = 0.1f;
+        nextMoveDown = interval;
+        yPixelsDown = 0;
     }
     else
     {
         nextMoveDown -= GetFrameTime();
+        yPixelsDown = static_cast<int>(((interval - nextMoveDown) / interval) * 20);
     }
+}
+
+void Game::clearFinishedRows()
+{
+    m_grid.handleFullRows();
 }

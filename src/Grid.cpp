@@ -4,7 +4,7 @@
 #include <Block.hpp>
 #include <GameUtils.hpp>
 
-void Grid::draw()
+void Grid::drawGrid()
 {
     for (int i = Utils::Config::numOfInvRows; i < Utils::Config::numOfRows; i++)
     {
@@ -17,67 +17,69 @@ void Grid::draw()
     
 }
 
-void Grid::addCube(int posX, int posY, BlockID color)
+void Grid::addTile(int posX, int posY, BlockID color)
 {
     m_cubesGrid[posY][posX] = color;
 }
 
-void Grid::removeCube(int posX, int posY)
+void Grid::removeTile(int posX, int posY)
 {
     m_cubesGrid[posY][posX] = BlockID::EMPTY_CELL;
 }
 
 void Grid::addBlock(const Block& block)
 {
-    auto positions = block.getCurrentLayer();
+    auto positions = block.getCurrentPositions();
 
     for (auto& position : positions)
     {
-        addCube(position.posX, position.posY, block.m_colorIndex);
+        addTile(position.posX, position.posY, block.m_colorIndex);
     }
 }
 
 bool Grid::isCollisionY(const Block& block)
 {
-    auto positions = block.getCurrentLayer();
+    auto positions = block.getCurrentPositions();
 
     for (auto& position : positions)
     {
         if (position.posY + 1 == Utils::Config::numOfRows)
             return true;
         
-        if (m_cubesGrid[position.posY + 1][position.posX])
+        if (isTileAt(position.posY + 1, position.posX))
             return true;
     }
 
     return false;
 }
 
-bool Grid::isCollisionXLeft(const Block& block)
+bool Grid::isCollisionLeft(const Block& block, bool rowAligned)
 {
-    auto positions = block.getCurrentLayer();
+    auto positions = block.getCurrentPositions();
 
     for (auto& position : positions)
     {
-        if ((position.posX - 1) < 0 )
-            return true;
-        
-        if (m_cubesGrid[position.posY][position.posX - 1])
+        bool isWallColl = position.posX - 1 < 0;
+        bool isCurrentRowColl = isTileAt(position.posY, position.posX - 1);
+        bool isNextRowColl = isTileAt(position.posY + 1, position.posX - 1) && !rowAligned;
+
+        if (isWallColl || isCurrentRowColl || isNextRowColl)
             return true;
     }
     return false;
 }
 
-bool Grid::isCollisionXRight(const Block& block)
+bool Grid::isCollisionRight(const Block& block, bool rowAligned)
 {
-    auto positions = block.getCurrentLayer();
+    auto positions = block.getCurrentPositions();
 
     for (auto& position : positions)
     {
-        if ((position.posX + 1) >= Utils::Config::numOfCols)
-            return true;
-        
-        if (m_cubesGrid[position.posY][position.posX + 1])
+        bool isWallColl = position.posX + 1 >= Utils::Config::numOfCols;
+        bool isCurrentRowColl = isTileAt(position.posY, position.posX + 1);
+        bool isNextRowColl = isTileAt(position.posY + 1, position.posX + 1) && !rowAligned;
+
+        if (isWallColl || isCurrentRowColl || isNextRowColl)
             return true;
     }
     return false;
@@ -89,13 +91,14 @@ void Grid::moveRowsDown(int startRow)
     {
         m_cubesGrid[row] = m_cubesGrid[row - 1];
     }
+    m_cubesGrid[0] = {};
 }
 
 bool Grid::isRowFinished(int row)
 {
     for (int i = 0; i < Utils::Config::numOfCols; i++)
     {
-        if (!m_cubesGrid[row][i])
+        if (!isTileAt(row, i))
             return false;
     }
 
@@ -113,18 +116,18 @@ void Grid::handleFullRows()
     }
 }
 
-bool Grid::isCubeAt(int posY, int posX)
+bool Grid::isTileAt(int posY, int posX)
 {
     return m_cubesGrid[posY][posX];
 }
 
 bool Grid::isGameOver(const Block& block)
 {
-    auto positions = block.getCurrentLayer();
+    auto positions = block.getCurrentPositions();
 
     for (auto& position : positions)
     {
-        if (m_cubesGrid[position.posY][position.posX])
+        if (isTileAt(position.posY, position.posX))
             return true;
     }
     return false;

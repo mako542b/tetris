@@ -4,43 +4,69 @@
 
 void Block::changeState(bool clockWise)
 {
-    m_state = clockWise ? (m_state + 1) % m_positions.size() : (m_state + 3) % m_positions.size();
+    m_rotationState = clockWise ? 
+        (m_rotationState + 1) % m_positions.size() :
+        (m_rotationState + 3) % m_positions.size();
 }
 
 
-void Block::drawBlock()
+void Block::drawBlock(int pixelsDown)
 {
-    auto currentLayer = getCurrentLayer();
+    auto currentLayer = getCurrentPositions();
     for (auto& cube : currentLayer)
     {
-        if (cube.posY < Utils::Config::numOfInvRows)
-            return;
-            
-        Utils::drawTile(cube.posX, cube.posY, getBlockColor(m_colorIndex));
+        if (cube.posY < Utils::Config::numOfInvRows - 1) //Tile at invisible rows
+        {
+            continue;
+        }
+        else if (cube.posY == Utils::Config::numOfInvRows - 1) //First visible row
+        {
+            Utils::drawTile(cube.posX, cube.posY + 1, getBlockColor(m_colorIndex), 0, pixelsDown);
+        }
+        else
+        {
+            Utils::drawTile(cube.posX, cube.posY, getBlockColor(m_colorIndex), pixelsDown);
+        }
     }
 }
 
-const std::array<Block::position, 4> Block::getCurrentLayer() const
+const std::array<Block::position, 4> Block::getCurrentPositions() const
 {
-    auto absPositions = m_positions[m_state];
-    for (auto& cube : absPositions)
+    auto positions = m_positions[m_rotationState];
+    for (auto& cube : positions)
     {
         cube.posX += m_offsetX;
         cube.posY += m_offsetY;
     }
-    return absPositions;
+    return positions;
 }
 
-const std::array<Block::position, 4>& Block::getPrevLayer()
+std::array<Block::position, 4> Block::getCCWPositions()
 {   
-    int newState = (m_state + 3) % m_positions.size();
-    return m_positions[newState];
+    int ccwIndex = (m_rotationState + m_positions.size() - 1) % m_positions.size();
+    auto ccwPositions = m_positions[ccwIndex];
+
+    for (auto& cube : ccwPositions)
+    {
+        cube.posX += m_offsetX;
+        cube.posY += m_offsetY;
+    }
+
+    return ccwPositions;
 }
 
-const std::array<Block::position, 4>& Block::getNextLayer()
+std::array<Block::position, 4> Block::getCWPositions()
 {   
-    int newState = (m_state + 1) % m_positions.size();
-    return m_positions[newState];
+    int cwIndex = (m_rotationState + 1) % m_positions.size();
+        auto ccwPositions = m_positions[cwIndex];
+
+    for (auto& cube : ccwPositions)
+    {
+        cube.posX += m_offsetX;
+        cube.posY += m_offsetY;
+    }
+
+    return ccwPositions;
 }
 
 void Block::moveY()
@@ -56,14 +82,4 @@ void Block::moveLeft()
 void Block::moveRight()
 {
     m_offsetX++;
-}
-
-int Block::getOffsetX()
-{
-    return m_offsetX;
-}
-
-int Block::getOffsetY()
-{
-    return m_offsetY;
 }

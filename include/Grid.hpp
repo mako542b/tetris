@@ -11,17 +11,17 @@ class Grid
 {
 
 public:
-    void draw();
-    void addCube(int posX, int posY, BlockID color);
-    void removeCube(int posX, int posY);
+    void drawGrid();
+    void addTile(int posX, int posY, BlockID color);
+    void removeTile(int posX, int posY);
     void addBlock(const Block& block);
     bool isCollisionY(const Block& block);
     void handleFullRows();
     bool isRowFinished(int row);
     void moveRowsDown(int startRow);
-    bool isCollisionXLeft(const Block& block);
-    bool isCollisionXRight(const Block& block);
-    bool isCubeAt(int posY, int posX);
+    bool isCollisionLeft(const Block& block, bool rowAligned);
+    bool isCollisionRight(const Block& block, bool rowAligned);
+    bool isTileAt(int posY, int posX);
     bool isGameOver(const Block& block);
 
 

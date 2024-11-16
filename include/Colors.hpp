@@ -18,10 +18,27 @@ enum BlockID
     COUNT
 };
 
-inline const Color getBlockColor(BlockID index)
+inline const Color getBlockColor(BlockID block)
 {
-    static const std::array<Color, 8> colors = {DARKBROWN, CUSTOM_CYAN, YELLOW, PURPLE, ORANGE, BLUE, GREEN, RED};
-    if (index >= colors.size())
-        return colors[EMPTY_CELL];
-    return colors[index];
+    switch (block)
+    {
+        case EMPTY_CELL:
+            return DARKBROWN;
+        case I_BLOCK:
+            return CUSTOM_CYAN;
+        case O_BLOCK:
+            return YELLOW;
+        case T_BLOCK:
+            return PURPLE;
+        case L_BLOCK:
+            return ORANGE;
+        case J_BLOCK:
+            return BLUE;
+        case S_BLOCK:
+            return GREEN;
+        case Z_BLOCK:
+            return RED;
+        default:
+            return DARKBROWN;
+    }
 }

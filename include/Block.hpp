@@ -20,7 +20,7 @@ public:
         int posX;
     };
 
-    void drawBlock();
+    void drawBlock(int pixelsDown);
 
     void changeState(bool clockWise);
 
@@ -28,8 +28,8 @@ public:
 
     void moveLeft();
     void moveRight();
-    const std::array<Block::position, 4>& getPrevLayer();
-    const std::array<Block::position, 4>& getNextLayer();
+    std::array<Block::position, 4> getCCWPositions();
+    std::array<Block::position, 4> getCWPositions();
     int getOffsetX();
     int getOffsetY();
 
@@ -45,7 +45,7 @@ protected:
     std::vector<std::array<position, 4>> m_positions;
 
 private:
-    const std::array<position, 4> getCurrentLayer() const;
-    int m_state = 0;
+    const std::array<position, 4> getCurrentPositions() const;
+    int m_rotationState = 0;
 
 };
