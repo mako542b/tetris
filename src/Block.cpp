@@ -6,14 +6,14 @@ void Block::changeState(bool clockWise)
 {
     m_rotationState = clockWise ? 
         (m_rotationState + 1) % m_positions.size() :
-        (m_rotationState + 3) % m_positions.size();
+        (m_rotationState + (m_positions.size() - 1)) % m_positions.size();
 }
 
 
 void Block::drawBlock(int pixelsDown)
 {
     auto currentLayer = getCurrentPositions();
-    for (auto cube : currentLayer)
+    for (auto cube : currentLayer) 
     {
         if (cube.posY < Utils::Config::numOfInvRows - 1) //Tile at invisible rows
         {

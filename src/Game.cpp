@@ -69,7 +69,7 @@ void Game::handleBlockMoveX()
 
 bool Game::canBlockRotate(bool clockWise, int offsetX)
 {
-    auto positions = clockWise ?  m_block->getCWPositions() : m_block->getCCWPositions();
+    auto positions = clockWise ?  m_currentBlock->getCWPositions() : m_currentBlock->getCCWPositions();
 
     for (auto position : positions)
     {
@@ -105,8 +105,8 @@ void Game::tryRotate(bool isClockWise)
         if (!canBlockRotate(isClockWise, offset))
             continue;
 
-        m_block->changeState(isClockWise);
-        m_block->moveXOffset(offset);
+        m_currentBlock->changeState(isClockWise);
+        m_currentBlock->moveXOffset(offset);
         return;
     }
 }
@@ -120,7 +120,7 @@ void Game::handleCollisionY()
 {
     static float swipeInTimeLeft = 0.1f;
 
-    if (m_grid.isCollisionY(*m_block))
+    if (m_grid.isCollisionY(*m_currentBlock))
     {
         if (swipeInTimeLeft > 0)
         {
@@ -128,11 +128,11 @@ void Game::handleCollisionY()
             return;
         }
 
-        m_grid.lockBlock(*m_block);
+        m_grid.lockBlock(*m_currentBlock);
         getNewBlock();
         swipeInTimeLeft = 0.1f;
 
-        if (m_grid.isGameOver(*m_block))
+        if (m_grid.isGameOver(*m_currentBlock))
         {
             m_isGameOver = true;
         }
@@ -143,7 +143,7 @@ void Game::handleProjection()
 {
     if (m_isProjectionOn)
     {
-        std::unique_ptr<Block> projectedBlock = m_block->clone();
+        std::unique_ptr<Block> projectedBlock = m_currentBlock->clone();
         hardDrop(*projectedBlock);
         projectedBlock->drawProjection();
     }
@@ -152,28 +152,29 @@ void Game::handleProjection()
 void Game::drawGame()
 {
     m_grid.drawGrid();
-    m_block->drawBlock(m_yPixelsDown);
+    m_currentBlock->drawBlock(m_yPixelsDown);
     handleProjection();
+    m_nextBlock->drawBlock(80);
 }
 
 void Game::blockMoveLeft()
 {
     bool isTileRowAligned = m_yPixelsDown < 3;
 
-    if (m_grid.isCollisionLeft(*m_block, isTileRowAligned))
+    if (m_grid.isCollisionLeft(*m_currentBlock, isTileRowAligned))
         return;
 
-    m_block->moveLeft();
+    m_currentBlock->moveLeft();
 }
 
 void Game::blockMoveRight()
 {
     bool isTileRowAligned = m_yPixelsDown < 3;
 
-    if (m_grid.isCollisionRight(*m_block, isTileRowAligned))
+    if (m_grid.isCollisionRight(*m_currentBlock, isTileRowAligned))
         return;
 
-    m_block->moveRight();
+    m_currentBlock->moveRight();
 }
 
 void Game::getNewBlock()
@@ -181,32 +182,18 @@ void Game::getNewBlock()
     int random = rand() % (BlockID::COUNT - 1) + 1;
     BlockID randomBlockId = static_cast<BlockID>(random);
 
-    switch (randomBlockId)
+    if (!m_nextBlock)
     {
-        case I_BLOCK:
-            m_block = std::make_unique<IBlock>();
-            break;
-        case O_BLOCK:
-            m_block = std::make_unique<OBlock>();
-            break;
-        case T_BLOCK:
-            m_block = std::make_unique<TBlock>();
-            break;
-        case L_BLOCK:
-            m_block = std::make_unique<LBlock>();
-            break;
-        case J_BLOCK:
-            m_block = std::make_unique<JBlock>();
-            break;
-        case S_BLOCK:
-            m_block = std::make_unique<SBlock>();
-            break;
-        case Z_BLOCK:
-            m_block = std::make_unique<ZBlock>();
-            break;
-        default:
-            break;
+        m_currentBlock = getSubBlock(randomBlockId);
+        random = rand() % (BlockID::COUNT - 1) + 1;
+        randomBlockId = static_cast<BlockID>(random);
     }
+    else
+    {
+        m_currentBlock = std::move(m_nextBlock);
+    }
+
+    m_nextBlock = getSubBlock(randomBlockId);
 }
 
 void Game::hardDrop(Block& block)
@@ -222,18 +209,18 @@ void Game::blockMoveDown()
     const float interval = (float) .2;
     static float nextMoveDown = interval;
 
-    if (m_grid.isCollisionY(*m_block))
+    if (m_grid.isCollisionY(*m_currentBlock))
         return;
 
     if (IsKeyPressed(KEY_SPACE))
     {
-        hardDrop(*m_block);
+        hardDrop(*m_currentBlock);
         nextMoveDown = interval;
         m_yPixelsDown = 0;
     }
     else if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
     {
-        m_block->moveY();
+        m_currentBlock->moveY();
         nextMoveDown = interval;
         m_yPixelsDown = 0;
     }

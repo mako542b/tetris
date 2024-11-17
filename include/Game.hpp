@@ -25,9 +25,6 @@ public:
     void hardDrop(Block& block);
     void handleProjection();
 
-
-
-
     Game()
     {
         getNewBlock();
@@ -36,7 +33,8 @@ public:
 
 private:
     Grid m_grid;
-    std::unique_ptr<Block> m_block;
+    std::unique_ptr<Block> m_currentBlock;
+    std::unique_ptr<Block> m_nextBlock;
     bool m_isGameOver = false;
     int m_yPixelsDown = 0;
     bool m_isProjectionOn = true;

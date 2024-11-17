@@ -5,10 +5,11 @@
 #include <Block.hpp>
 #include <string>
 #include <Game.hpp>
+#include "GameUtils.hpp"
 
 int main()
 {
-    InitWindow(400, 500, "Tetris");
+    InitWindow(Utils::Config::gameWindowSizeX, Utils::Config::gameWindowSizeY, "Tetris");
     SetTargetFPS(60);
     
     Game game;

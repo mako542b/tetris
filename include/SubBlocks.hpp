@@ -140,3 +140,26 @@ public:
         return std::make_unique<JBlock>(*this);
     }
 };
+
+inline std::unique_ptr<Block> getSubBlock(BlockID blockID)
+{
+    switch (blockID)
+    {
+        case I_BLOCK:
+            return std::make_unique<IBlock>();
+        case O_BLOCK:
+            return std::make_unique<OBlock>();
+        case T_BLOCK:
+            return std::make_unique<TBlock>();
+        case L_BLOCK:
+            return std::make_unique<LBlock>();
+        case J_BLOCK:
+            return std::make_unique<JBlock>();
+        case S_BLOCK:
+            return std::make_unique<SBlock>();
+        case Z_BLOCK:
+            return std::make_unique<ZBlock>();
+        default:
+            return std::make_unique<IBlock>();
+    }
+}
