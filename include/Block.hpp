@@ -2,6 +2,7 @@
 
 #include <array>
 #include <vector>
+#include <memory>
 #include "Colors.hpp"
 
 class Grid;
@@ -21,7 +22,7 @@ public:
     };
 
     void drawBlock(int pixelsDown);
-
+    void drawProjection();
     void changeState(bool clockWise);
 
     void moveY();
@@ -31,7 +32,7 @@ public:
     std::array<Block::position, 4> getCCWPositions();
     std::array<Block::position, 4> getCWPositions();
     void moveXOffset(int offset);
-
+    virtual std::unique_ptr<Block> clone() const = 0;
 
 
 public:

@@ -139,15 +139,26 @@ void Game::handleCollisionY()
     }
 }
 
+void Game::handleProjection()
+{
+    if (m_isProjectionOn)
+    {
+        std::unique_ptr<Block> projectedBlock = m_block->clone();
+        hardDrop(*projectedBlock);
+        projectedBlock->drawProjection();
+    }
+}
+
 void Game::drawGame()
 {
     m_grid.drawGrid();
-    m_block->drawBlock(yPixelsDown);
+    m_block->drawBlock(m_yPixelsDown);
+    handleProjection();
 }
 
 void Game::blockMoveLeft()
 {
-    bool isTileRowAligned = yPixelsDown < 3;
+    bool isTileRowAligned = m_yPixelsDown < 3;
 
     if (m_grid.isCollisionLeft(*m_block, isTileRowAligned))
         return;
@@ -157,7 +168,7 @@ void Game::blockMoveLeft()
 
 void Game::blockMoveRight()
 {
-    bool isTileRowAligned = yPixelsDown < 3;
+    bool isTileRowAligned = m_yPixelsDown < 3;
 
     if (m_grid.isCollisionRight(*m_block, isTileRowAligned))
         return;
@@ -198,11 +209,11 @@ void Game::getNewBlock()
     }
 }
 
-void Game::hardDrop()
+void Game::hardDrop(Block& block)
 {
-    while (!m_grid.isCollisionY(*m_block))
+    while (!m_grid.isCollisionY(block))
     {
-        m_block->moveY();
+        block.moveY();
     }
 }
 
@@ -216,20 +227,20 @@ void Game::blockMoveDown()
 
     if (IsKeyPressed(KEY_SPACE))
     {
-        hardDrop();
+        hardDrop(*m_block);
         nextMoveDown = interval;
-        yPixelsDown = 0;
+        m_yPixelsDown = 0;
     }
     else if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
     {
         m_block->moveY();
         nextMoveDown = interval;
-        yPixelsDown = 0;
+        m_yPixelsDown = 0;
     }
     else
     {
         nextMoveDown -= GetFrameTime();
-        yPixelsDown = static_cast<int>(((interval - nextMoveDown) / interval) * 20);
+        m_yPixelsDown = static_cast<int>(((interval - nextMoveDown) / interval) * 20);
     }
 }
 

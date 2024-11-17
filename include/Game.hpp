@@ -22,7 +22,9 @@ public:
     void getNewBlock();
     void blockMoveDown();
     void clearFinishedRows();
-    void hardDrop();
+    void hardDrop(Block& block);
+    void handleProjection();
+
 
 
 
@@ -36,5 +38,6 @@ private:
     Grid m_grid;
     std::unique_ptr<Block> m_block;
     bool m_isGameOver = false;
-    int yPixelsDown = 0;
+    int m_yPixelsDown = 0;
+    bool m_isProjectionOn = true;
 };

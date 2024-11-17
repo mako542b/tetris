@@ -15,6 +15,11 @@ public:
         m_offsetY = 0;
         m_blockID = BlockID::I_BLOCK;
     }
+
+    std::unique_ptr<Block> clone() const override
+    {
+        return std::make_unique<IBlock>(*this);
+    }
 };
 
 class TBlock : public Block
@@ -31,6 +36,11 @@ public:
         m_offsetY = 0;
         m_blockID = BlockID::T_BLOCK; 
     }
+
+    std::unique_ptr<Block> clone() const override
+    {
+        return std::make_unique<TBlock>(*this);
+    }
 };
 
 class OBlock : public Block
@@ -43,6 +53,11 @@ public:
         m_offsetX = 5;
         m_offsetY = 0;
         m_blockID = BlockID::O_BLOCK;
+    }
+
+    std::unique_ptr<Block> clone() const override
+    {
+        return std::make_unique<OBlock>(*this);
     }
 };
 
@@ -58,6 +73,11 @@ public:
         m_offsetY = 0;
         m_blockID = BlockID::Z_BLOCK;
     }
+
+    std::unique_ptr<Block> clone() const override
+    {
+        return std::make_unique<ZBlock>(*this);
+    }
 };
 
 class SBlock : public Block
@@ -71,6 +91,11 @@ public:
         m_offsetX = 5;
         m_offsetY = 0;
         m_blockID = BlockID::S_BLOCK;
+    }
+
+    std::unique_ptr<Block> clone() const override
+    {
+        return std::make_unique<SBlock>(*this);
     }
 };
 
@@ -88,6 +113,11 @@ public:
         m_offsetY = 0;
         m_blockID = BlockID::L_BLOCK;
     }
+
+    std::unique_ptr<Block> clone() const override
+    {
+        return std::make_unique<LBlock>(*this);
+    }
 };
 
 class JBlock : public Block
@@ -103,5 +133,10 @@ public:
         m_offsetX = 5;
         m_offsetY = 0;
         m_blockID = BlockID::J_BLOCK;
+    }
+
+    std::unique_ptr<Block> clone() const override
+    {
+        return std::make_unique<JBlock>(*this);
     }
 };

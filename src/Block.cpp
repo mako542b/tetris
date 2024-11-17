@@ -30,6 +30,24 @@ void Block::drawBlock(int pixelsDown)
     }
 }
 
+void Block::drawProjection()
+{
+    auto currentLayer = getCurrentPositions();
+    Color projectionColor = Color{255, 255, 255, 50};
+
+    for (auto cube : currentLayer)
+    {
+        if (cube.posY < Utils::Config::numOfInvRows) //Tile at invisible rows
+        {
+            continue;
+        }
+        else
+        {
+            Utils::drawTile(cube.posX, cube.posY, projectionColor);
+        }
+    }
+}
+
 const std::array<Block::position, 4> Block::getCurrentPositions() const
 {
     auto positions = m_positions[m_rotationState];
