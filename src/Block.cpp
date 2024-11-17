@@ -21,11 +21,11 @@ void Block::drawBlock(int pixelsDown)
         }
         else if (cube.posY == Utils::Config::numOfInvRows - 1) //First visible row
         {
-            Utils::drawTile(cube.posX, cube.posY + 1, getBlockColor(m_colorIndex), 0, pixelsDown);
+            Utils::drawTile(cube.posX, cube.posY + 1, getBlockColor(m_blockID), 0, pixelsDown);
         }
         else
         {
-            Utils::drawTile(cube.posX, cube.posY, getBlockColor(m_colorIndex), pixelsDown);
+            Utils::drawTile(cube.posX, cube.posY, getBlockColor(m_blockID), pixelsDown);
         }
     }
 }
@@ -82,4 +82,9 @@ void Block::moveLeft()
 void Block::moveRight()
 {
     m_offsetX++;
+}
+
+void Block::moveXOffset(int offset)
+{
+    m_offsetX += offset;
 }

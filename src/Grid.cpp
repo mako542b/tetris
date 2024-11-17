@@ -33,7 +33,7 @@ void Grid::addBlock(const Block& block)
 
     for (auto& position : positions)
     {
-        addTile(position.posX, position.posY, block.m_colorIndex);
+        addTile(position.posX, position.posY, block.m_blockID);
     }
 }
 

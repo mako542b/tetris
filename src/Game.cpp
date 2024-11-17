@@ -21,7 +21,7 @@ void Game::GameLoop()
         handleCollisionY();
         clearFinishedRows();
         blockMoveDown();
-        handleKeyboardEvents();
+        handleBlockMoveX();
         handleRotate();
         drawGame();
     }
@@ -67,16 +67,18 @@ void Game::handleBlockMoveX()
     }
 }
 
-bool Game::canBlockRotate(bool clockWise)
+bool Game::canBlockRotate(bool clockWise, int offsetX)
 {
     auto positions = clockWise ?  m_block->getCWPositions() : m_block->getCCWPositions();
 
-    for (auto& position : positions)
+    for (auto position : positions)
     {
-        if (position.posX >= Utils::Config::numOfCols || position.posX < 0 || position.posY < 0)
+        int posX = position.posX + offsetX;
+
+        if (posX >= Utils::Config::numOfCols || posX < 0 || position.posY < 0)
             return false;
         
-        if (m_grid.isTileAt(position.posY, position.posX))
+        if (m_grid.isTileAt(position.posY, posX))
             return false;
     }
     return true;
@@ -86,29 +88,50 @@ void Game::handleRotate()
 {
     if (IsKeyPressed(KEY_X))
     {
-        if (canBlockRotate(true))
-            m_block->changeState(true);
+        tryRotate(true);
     }
     else if (IsKeyPressed(KEY_Z))
     {
-        if (canBlockRotate(false))
-            m_block->changeState(false);
+        tryRotate(false);
     }
-
 }
 
+void Game::tryRotate(bool isClockWise)
+{
+    int xOffsets[] = {0, 1, -1, 2, -2};
+
+    for (int offset : xOffsets)
+    {
+        if (!canBlockRotate(isClockWise, offset))
+            continue;
+
+        m_block->changeState(isClockWise);
+        m_block->moveXOffset(offset);
+        return;
+    }
+}
 
 void Game::handleKeyboardEvents()
 {
-    handleBlockMoveX();
+
 }
 
 void Game::handleCollisionY()
 {
+    static float swipeInTimeLeft = 0.1f;
+
     if (m_grid.isCollisionY(*m_block))
     {
+        if (swipeInTimeLeft > 0)
+        {
+            swipeInTimeLeft -= GetFrameTime();
+            return;
+        }
+
         m_grid.addBlock(*m_block);
         getNewBlock();
+        swipeInTimeLeft = 0.1f;
+
         if (m_grid.isGameOver(*m_block))
         {
             m_isGameOver = true;
@@ -177,8 +200,11 @@ void Game::getNewBlock()
 
 void Game::blockMoveDown()
 {
-    const float interval = (float) 1;
+    const float interval = (float) .2;
     static float nextMoveDown = interval;
+
+    if (m_grid.isCollisionY(*m_block))
+        return;
 
     if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
     {

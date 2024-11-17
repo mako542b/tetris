@@ -30,13 +30,13 @@ public:
     void moveRight();
     std::array<Block::position, 4> getCCWPositions();
     std::array<Block::position, 4> getCWPositions();
-    int getOffsetX();
-    int getOffsetY();
+    void moveXOffset(int offset);
+
 
 
 public:
 
-    BlockID m_colorIndex;
+    BlockID m_blockID;
 
 protected:
 

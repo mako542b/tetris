@@ -17,7 +17,8 @@ public:
     void blockMoveRight();
     void handleBlockMoveX();
     void handleRotate();
-    bool canBlockRotate(bool clockWise);
+    bool canBlockRotate(bool clockWise, int offsetX = 0);
+    void tryRotate(bool isClockWise);
     void getNewBlock();
     void blockMoveDown();
     void clearFinishedRows();
