@@ -22,6 +22,8 @@ public:
     void getNewBlock();
     void blockMoveDown();
     void clearFinishedRows();
+    void hardDrop();
+
 
 
     Game()

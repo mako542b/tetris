@@ -27,7 +27,7 @@ void Grid::removeTile(int posX, int posY)
     m_cubesGrid[posY][posX] = BlockID::EMPTY_CELL;
 }
 
-void Grid::addBlock(const Block& block)
+void Grid::lockBlock(const Block& block)
 {
     auto positions = block.getCurrentPositions();
 

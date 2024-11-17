@@ -14,7 +14,7 @@ public:
     void drawGrid();
     void addTile(int posX, int posY, BlockID color);
     void removeTile(int posX, int posY);
-    void addBlock(const Block& block);
+    void lockBlock(const Block& block);
     bool isCollisionY(const Block& block);
     void handleFullRows();
     bool isRowFinished(int row);

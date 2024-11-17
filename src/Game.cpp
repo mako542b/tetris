@@ -128,7 +128,7 @@ void Game::handleCollisionY()
             return;
         }
 
-        m_grid.addBlock(*m_block);
+        m_grid.lockBlock(*m_block);
         getNewBlock();
         swipeInTimeLeft = 0.1f;
 
@@ -198,6 +198,14 @@ void Game::getNewBlock()
     }
 }
 
+void Game::hardDrop()
+{
+    while (!m_grid.isCollisionY(*m_block))
+    {
+        m_block->moveY();
+    }
+}
+
 void Game::blockMoveDown()
 {
     const float interval = (float) .2;
@@ -206,7 +214,13 @@ void Game::blockMoveDown()
     if (m_grid.isCollisionY(*m_block))
         return;
 
-    if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
+    if (IsKeyPressed(KEY_SPACE))
+    {
+        hardDrop();
+        nextMoveDown = interval;
+        yPixelsDown = 0;
+    }
+    else if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
     {
         m_block->moveY();
         nextMoveDown = interval;

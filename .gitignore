@@ -1,0 +1,4 @@
+build/
+lib/
+libraylib.a
+.vscode/
