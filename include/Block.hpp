@@ -21,8 +21,6 @@ public:
         int posX;
     };
 
-    void drawBlock(int pixelsDown);
-    void drawProjection();
     void changeState(bool clockWise);
 
     void moveY();
@@ -40,6 +38,7 @@ public:
     inline void setIsHarddropped() { m_isHardDropped = true; }
     inline void setHarddroppedRows(int rows) { m_hardDroppedRows = rows; }
     inline int getHarddroppedRows() { return m_hardDroppedRows; }
+    inline BlockID getBlockID() const { return m_blockID; }
 
 
 public:

@@ -4,7 +4,7 @@
 #include "Block.hpp"
 #include "SubBlocks.hpp"
 #include <memory>
-#include "InfoWindow.hpp"
+#include "GameData.hpp"
 
 enum class TSpinType
 {
@@ -17,10 +17,8 @@ enum class TSpinType
 class Game
 {
 public:
-    void handleKeyboardEvents();
     bool handleCollisionY();
     void GameLoop();
-    void drawGame();
     void blockMoveLeft();
     void blockMoveRight();
     void handleBlockMoveX();
@@ -30,17 +28,18 @@ public:
     void getNewBlock();
     void blockMoveDown();
     int checkFinishedRows();
-    void setProjectedPosition(Block& block);
+    void setProjectedPosition(Block& block) const;
     void hardDrop(Block& block);
-    void handleProjection();
     void handleScore(int finishedRows);
     bool isTSpin();
 
+    inline const Block& getBlock() const { return *m_currentBlock; }
+    inline const Block& getNextBlock() const { return *m_nextBlock; }
+    inline const Grid& getGrid() const { return m_grid; }
+    inline const GameData& getGameData() const { return m_gameData; }
 
-    Game()
-    {
-        getNewBlock();
-    };
+
+    Game() { getNewBlock(); }
 
 
 private:
@@ -48,7 +47,5 @@ private:
     std::unique_ptr<Block> m_currentBlock;
     std::unique_ptr<Block> m_nextBlock;
     bool m_isGameOver = false;
-    int m_yPixelsDown = 0;
-    bool m_isProjectionOn = true;
-    InfoWindow m_infoWindow;
+    GameData m_gameData;
 };

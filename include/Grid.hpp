@@ -11,19 +11,20 @@ class Grid
 {
 
 public:
-    void drawGrid();
     void addTile(int posX, int posY, BlockID color);
     void removeTile(int posX, int posY);
     void lockBlock(const Block& block);
-    bool isCollisionY(const Block& block);
+    bool isCollisionY(const Block& block) const;
     int clearFullRows();
     bool isRowFinished(int row);
     void moveRowsDown(int startRow);
     bool isCollisionLeft(const Block& block, bool rowAligned);
     bool isCollisionRight(const Block& block, bool rowAligned);
-    bool isTileAt(int posY, int posX);
+    bool isTileAt(int posY, int posX) const;
     bool isGameOver(const Block& block);
     bool isClearedGrid();
+
+    inline BlockID getTileBlockID(int posY, int posX) const { return m_cubesGrid[posY][posX]; }
 
 
 private:

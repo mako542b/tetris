@@ -6,6 +6,7 @@
 #include <string>
 #include <Game.hpp>
 #include "GameUtils.hpp"
+#include "Renderer.hpp"
 
 int main()
 {
@@ -13,6 +14,7 @@ int main()
     SetTargetFPS(60);
     
     Game game;
+    Renderer renderer;
 
     while (!WindowShouldClose())
     {
@@ -20,6 +22,7 @@ int main()
         ClearBackground(DARKGRAY);
         
         game.GameLoop();
+        renderer.Render(game);
 
         EndDrawing();
     }

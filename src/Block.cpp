@@ -9,45 +9,6 @@ void Block::changeState(bool clockWise)
         (m_rotationState + (m_positions.size() - 1)) % m_positions.size();
 }
 
-
-void Block::drawBlock(int pixelsDown)
-{
-    auto currentLayer = getCurrentPositions();
-    for (auto cube : currentLayer) 
-    {
-        if (cube.posY < Utils::Config::numOfInvRows - 1) //Tile at invisible rows
-        {
-            continue;
-        }
-        else if (cube.posY == Utils::Config::numOfInvRows - 1) //First visible row
-        {
-            Utils::drawGameTile(cube.posX, cube.posY + 1, getBlockColor(m_blockID), 0, pixelsDown);
-        }
-        else
-        {
-            Utils::drawGameTile(cube.posX, cube.posY, getBlockColor(m_blockID), pixelsDown);
-        }
-    }
-}
-
-void Block::drawProjection()
-{
-    auto currentLayer = getCurrentPositions();
-    Color projectionColor = Color{255, 255, 255, 50};
-
-    for (auto cube : currentLayer)
-    {
-        if (cube.posY < Utils::Config::numOfInvRows) //Tile at invisible rows
-        {
-            continue;
-        }
-        else
-        {
-            Utils::drawGameTile(cube.posX, cube.posY, projectionColor);
-        }
-    }
-}
-
 const std::array<Block::position, 4> Block::getCurrentPositions() const
 {
     auto positions = m_positions[m_rotationState];

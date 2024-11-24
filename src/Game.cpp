@@ -7,7 +7,6 @@ void Game::GameLoop()
 
     if (m_isGameOver)
     {
-        drawGame();
         DrawText("GAME OVER!", 20, 20, 20, BLACK);
 
         if (IsKeyDown(KEY_N))
@@ -35,14 +34,12 @@ void Game::GameLoop()
             handleBlockMoveX();
             handleRotate();
         }
-
-        drawGame();
     }
 }
 
 void Game::handleBlockMoveX()
 {
-    static float nextKeyUpdate = 0.2f;
+    static float nextKeyUpdate = 0.2f; //todo move to gamaData
 
     if (IsKeyPressed(KEY_LEFT))
     {
@@ -125,11 +122,6 @@ void Game::tryRotate(bool isClockWise)
     }
 }
 
-void Game::handleKeyboardEvents()
-{
-
-}
-
 bool Game::handleCollisionY()
 {
     static float swipeInTimeLeft = 0.1f;
@@ -151,29 +143,9 @@ bool Game::handleCollisionY()
     return false;
 }
 
-void Game::handleProjection()
-{
-    if (m_isProjectionOn)
-    {
-        std::unique_ptr<Block> projectedBlock = m_currentBlock->clone();
-        setProjectedPosition(*projectedBlock);
-        projectedBlock->drawProjection();
-    }
-}
-
-void Game::drawGame()
-{
-    m_grid.drawGrid();
-    m_currentBlock->drawBlock(m_yPixelsDown);
-    handleProjection();
-
-    m_infoWindow.drawNextBlock(*m_nextBlock);
-    m_infoWindow.drawScore();
-}
-
 void Game::blockMoveLeft()
 {
-    bool isTileRowAligned = m_yPixelsDown < 3;
+    bool isTileRowAligned = m_gameData.getBlockRowPixelOffset() < 3;
 
     if (m_grid.isCollisionLeft(*m_currentBlock, isTileRowAligned))
         return;
@@ -183,7 +155,7 @@ void Game::blockMoveLeft()
 
 void Game::blockMoveRight()
 {
-    bool isTileRowAligned = m_yPixelsDown < 3;
+    bool isTileRowAligned = m_gameData.getBlockRowPixelOffset() < 3;
 
     if (m_grid.isCollisionRight(*m_currentBlock, isTileRowAligned))
         return;
@@ -210,7 +182,7 @@ void Game::getNewBlock()
     m_nextBlock = getSubBlock(randomBlockId);
 }
 
-void Game::setProjectedPosition(Block& block)
+void Game::setProjectedPosition(Block& block) const
 {
     while (!m_grid.isCollisionY(block))
     {
@@ -234,8 +206,6 @@ void Game::hardDrop(Block& block)
 
 void Game::blockMoveDown()
 {
-    const float interval = (float) .2;
-    static float nextMoveDown = interval;
 
     if (m_grid.isCollisionY(*m_currentBlock))
         return;
@@ -243,19 +213,16 @@ void Game::blockMoveDown()
     if (IsKeyPressed(KEY_SPACE))
     {
         hardDrop(*m_currentBlock);
-        nextMoveDown = interval;
-        m_yPixelsDown = 0;
+        m_gameData.resetNextGravityMove();
     }
-    else if(nextMoveDown <= 0 || IsKeyDown(KEY_DOWN))
+    else if(m_gameData.getNextGravityMove() <= 0 || IsKeyDown(KEY_DOWN))
     {
         m_currentBlock->moveY();
-        nextMoveDown = interval;
-        m_yPixelsDown = 0;
+        m_gameData.resetNextGravityMove();
     }
     else
     {
-        nextMoveDown -= GetFrameTime();
-        m_yPixelsDown = static_cast<int>(((interval - nextMoveDown) / interval) * 20);
+        m_gameData.updateNextGravityMove();
     }
 }
 
@@ -271,7 +238,7 @@ void Game::handleScore(int finishedRows)
     info.hardDroppedRows = m_currentBlock->getHarddroppedRows();
     info.isGridCleared = m_grid.isClearedGrid();
     info.isTSpin = isTSpin();
-    m_infoWindow.handleScore(info);
+    m_gameData.handleScore(info);
 }
 
 bool Game::isTSpin()
@@ -301,5 +268,4 @@ bool Game::isTSpin()
     }
 
     return occupiedCorners >= 3;
-
 }

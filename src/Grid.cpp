@@ -4,19 +4,6 @@
 #include <Block.hpp>
 #include <GameUtils.hpp>
 
-void Grid::drawGrid()
-{
-    for (int row = Utils::Config::numOfInvRows; row < Utils::Config::numOfRows; row++)
-    {
-        for (int col = 0; col < Utils::Config::numOfCols; col++)
-        {
-            BlockID colorIndex = m_cubesGrid[row][col];
-            Utils::drawGameTile(col, row, getBlockColor(colorIndex));
-        }
-    }
-    
-}
-
 void Grid::addTile(int posX, int posY, BlockID color)
 {
     m_cubesGrid[posY][posX] = color;
@@ -37,7 +24,7 @@ void Grid::lockBlock(const Block& block)
     }
 }
 
-bool Grid::isCollisionY(const Block& block)
+bool Grid::isCollisionY(const Block& block) const
 {
     auto positions = block.getCurrentPositions();
 
@@ -121,7 +108,7 @@ int Grid::clearFullRows()
     return finishedRows;
 }
 
-bool Grid::isTileAt(int posY, int posX)
+bool Grid::isTileAt(int posY, int posX) const
 {
     return m_cubesGrid[posY][posX];
 }
@@ -148,6 +135,6 @@ bool Grid::isClearedGrid()
                 return false;    
         }
     }
-    
+
     return true;
 }
