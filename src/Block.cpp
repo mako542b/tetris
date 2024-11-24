@@ -21,11 +21,11 @@ void Block::drawBlock(int pixelsDown)
         }
         else if (cube.posY == Utils::Config::numOfInvRows - 1) //First visible row
         {
-            Utils::drawTile(cube.posX, cube.posY + 1, getBlockColor(m_blockID), 0, pixelsDown);
+            Utils::drawGameTile(cube.posX, cube.posY + 1, getBlockColor(m_blockID), 0, pixelsDown);
         }
         else
         {
-            Utils::drawTile(cube.posX, cube.posY, getBlockColor(m_blockID), pixelsDown);
+            Utils::drawGameTile(cube.posX, cube.posY, getBlockColor(m_blockID), pixelsDown);
         }
     }
 }
@@ -43,7 +43,7 @@ void Block::drawProjection()
         }
         else
         {
-            Utils::drawTile(cube.posX, cube.posY, projectionColor);
+            Utils::drawGameTile(cube.posX, cube.posY, projectionColor);
         }
     }
 }
@@ -57,6 +57,11 @@ const std::array<Block::position, 4> Block::getCurrentPositions() const
         cube.posY += m_offsetY;
     }
     return positions;
+}
+
+const std::array<Block::position, 4> Block::getCurrentAbsPositions() const
+{
+    return m_positions[m_rotationState];
 }
 
 std::array<Block::position, 4> Block::getCCWPositions()
@@ -102,7 +107,8 @@ void Block::moveRight()
     m_offsetX++;
 }
 
-void Block::moveXOffset(int offset)
+void Block::moveOffset(position offset)
 {
-    m_offsetX += offset;
+    m_offsetX += offset.posX;
+    m_offsetY += offset.posY;
 }

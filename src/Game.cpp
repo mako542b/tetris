@@ -18,11 +18,24 @@ void Game::GameLoop()
     }
     else
     {
-        handleCollisionY();
-        clearFinishedRows();
-        blockMoveDown();
-        handleBlockMoveX();
-        handleRotate();
+        if (handleCollisionY())
+        {
+            int finishedRows = checkFinishedRows();
+            handleScore(finishedRows);
+            getNewBlock();
+
+            if (m_grid.isGameOver(*m_currentBlock))
+            {
+                m_isGameOver = true;
+            }
+        }
+        else
+        {
+            blockMoveDown();
+            handleBlockMoveX();
+            handleRotate();
+        }
+
         drawGame();
     }
 }
@@ -67,18 +80,19 @@ void Game::handleBlockMoveX()
     }
 }
 
-bool Game::canBlockRotate(bool clockWise, int offsetX)
+bool Game::canBlockRotate(bool clockWise, Block::position offset)
 {
     auto positions = clockWise ?  m_currentBlock->getCWPositions() : m_currentBlock->getCCWPositions();
 
     for (auto position : positions)
     {
-        int posX = position.posX + offsetX;
+        int posX = position.posX + offset.posX;
+        int posY = position.posY + offset.posY;
 
-        if (posX >= Utils::Config::numOfCols || posX < 0 || position.posY < 0)
+        if (posX >= Utils::Config::numOfCols || posX < 0 || position.posY >= Utils::Config::numOfRows)
             return false;
         
-        if (m_grid.isTileAt(position.posY, posX))
+        if (m_grid.isTileAt(posY, posX))
             return false;
     }
     return true;
@@ -98,15 +112,15 @@ void Game::handleRotate()
 
 void Game::tryRotate(bool isClockWise)
 {
-    int xOffsets[] = {0, 1, -1, 2, -2};
+    Block::position xOffsets[] = { {0, 0}, {0, 1}, {0, -1}, {0, 2}, {0,-2} , {1, 0}, {1, 1}, {1, -1}};
 
-    for (int offset : xOffsets)
+    for (auto offset : xOffsets)
     {
         if (!canBlockRotate(isClockWise, offset))
             continue;
 
         m_currentBlock->changeState(isClockWise);
-        m_currentBlock->moveXOffset(offset);
+        m_currentBlock->moveOffset(offset);
         return;
     }
 }
@@ -116,27 +130,25 @@ void Game::handleKeyboardEvents()
 
 }
 
-void Game::handleCollisionY()
+bool Game::handleCollisionY()
 {
     static float swipeInTimeLeft = 0.1f;
 
     if (m_grid.isCollisionY(*m_currentBlock))
     {
-        if (swipeInTimeLeft > 0)
+        if (swipeInTimeLeft > 0 && !m_currentBlock->getIsHardDropped())
         {
             swipeInTimeLeft -= GetFrameTime();
-            return;
+            return false;
         }
 
         m_grid.lockBlock(*m_currentBlock);
-        getNewBlock();
         swipeInTimeLeft = 0.1f;
 
-        if (m_grid.isGameOver(*m_currentBlock))
-        {
-            m_isGameOver = true;
-        }
+        return true;
     }
+
+    return false;
 }
 
 void Game::handleProjection()
@@ -144,7 +156,7 @@ void Game::handleProjection()
     if (m_isProjectionOn)
     {
         std::unique_ptr<Block> projectedBlock = m_currentBlock->clone();
-        hardDrop(*projectedBlock);
+        setProjectedPosition(*projectedBlock);
         projectedBlock->drawProjection();
     }
 }
@@ -154,7 +166,9 @@ void Game::drawGame()
     m_grid.drawGrid();
     m_currentBlock->drawBlock(m_yPixelsDown);
     handleProjection();
-    m_nextBlock->drawBlock(80);
+
+    m_infoWindow.drawNextBlock(*m_nextBlock);
+    m_infoWindow.drawScore();
 }
 
 void Game::blockMoveLeft()
@@ -196,12 +210,26 @@ void Game::getNewBlock()
     m_nextBlock = getSubBlock(randomBlockId);
 }
 
-void Game::hardDrop(Block& block)
+void Game::setProjectedPosition(Block& block)
 {
     while (!m_grid.isCollisionY(block))
     {
         block.moveY();
     }
+}
+
+void Game::hardDrop(Block& block)
+{
+    int hardDroppedRows = 0;
+
+    while (!m_grid.isCollisionY(block))
+    {
+        block.moveY();
+        hardDroppedRows++;
+    }
+
+    m_currentBlock->setHarddroppedRows(hardDroppedRows);
+    m_currentBlock->setIsHarddropped();
 }
 
 void Game::blockMoveDown()
@@ -231,7 +259,47 @@ void Game::blockMoveDown()
     }
 }
 
-void Game::clearFinishedRows()
+int Game::checkFinishedRows()
 {
-    m_grid.handleFullRows();
+    return m_grid.clearFullRows();
+}
+
+void Game::handleScore(int finishedRows)
+{
+    ScoreInfo_t info;
+    info.clearedRows = finishedRows;
+    info.hardDroppedRows = m_currentBlock->getHarddroppedRows();
+    info.isGridCleared = m_grid.isClearedGrid();
+    info.isTSpin = isTSpin();
+    m_infoWindow.handleScore(info);
+}
+
+bool Game::isTSpin()
+{
+    if (m_currentBlock->m_blockID != BlockID::T_BLOCK || m_currentBlock->m_rotationState != 2)
+        return false;
+
+    auto pivot = m_currentBlock->getCurrentPositions()[1];
+    int pivotOffsetsY[] = {-1, 1};
+    int pivotOffsetsX[] = {-1, 1};
+    int occupiedCorners = 0;
+
+    for (int offsetsY : pivotOffsetsY)
+    {
+        for (int offsetsX : pivotOffsetsX)
+        {
+            int cornerYPos = pivot.posY + offsetsY;
+            int cornerXPos = pivot.posX + offsetsX;
+
+            if (cornerYPos >= Utils::Config::numOfRows ||
+                cornerXPos < 0 ||
+                cornerXPos >= Utils::Config::numOfCols||
+                m_grid.isTileAt(cornerYPos, cornerXPos
+            ))
+                occupiedCorners++;
+        }
+    }
+
+    return occupiedCorners >= 3;
+
 }

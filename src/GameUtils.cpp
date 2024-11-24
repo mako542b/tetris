@@ -5,7 +5,7 @@
 namespace Utils
 {
 
-void drawTile(int startPosX, int startPosY, const Color& color, int pixelOffsetY, int height)
+void drawGameTile(int startPosX, int startPosY, const Color& color, int pixelOffsetY, int height)
 {
     if (height <= Config::tilePadding)
         return;
@@ -21,6 +21,20 @@ void drawTile(int startPosX, int startPosY, const Color& color, int pixelOffsetY
         color
     );
 
+}
+
+void drawInfoTile(int startPosX, int startPosY, const Color& color)
+{
+    int posY = startPosY * Utils::Config::tileSizeY + Utils::Config::paddingYTop + 100 + Config::tilePadding;
+    int posX = startPosX * Utils::Config::tileSizeX + Utils::Config::gameGridSizeX + 50 + Config::tilePadding;
+    
+    DrawRectangle(
+        posX,
+        posY,
+        20 - Config::tilePadding,
+        20 - Config::tilePadding,
+        color
+    );
 }
 
 }

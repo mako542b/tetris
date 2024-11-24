@@ -6,12 +6,12 @@
 
 void Grid::drawGrid()
 {
-    for (int i = Utils::Config::numOfInvRows; i < Utils::Config::numOfRows; i++)
+    for (int row = Utils::Config::numOfInvRows; row < Utils::Config::numOfRows; row++)
     {
-        for (int j = 0; j < Utils::Config::numOfCols; j++)
+        for (int col = 0; col < Utils::Config::numOfCols; col++)
         {
-            BlockID colorIndex = m_cubesGrid[i][j];
-            Utils::drawTile(j, i, getBlockColor(colorIndex));
+            BlockID colorIndex = m_cubesGrid[row][col];
+            Utils::drawGameTile(col, row, getBlockColor(colorIndex));
         }
     }
     
@@ -96,24 +96,29 @@ void Grid::moveRowsDown(int startRow)
 
 bool Grid::isRowFinished(int row)
 {
-    for (int i = 0; i < Utils::Config::numOfCols; i++)
+    for (int col = 0; col < Utils::Config::numOfCols; col++)
     {
-        if (!isTileAt(row, i))
+        if (!isTileAt(row, col))
             return false;
     }
 
     return true;
 }
 
-void Grid::handleFullRows()
+int Grid::clearFullRows()
 {
-    for (int i = 0; i < Utils::Config::numOfRows; i++)
+    int finishedRows = 0;
+
+    for (int row = 0; row < Utils::Config::numOfRows; row++)
     {
-        if (isRowFinished(i))
+        if (isRowFinished(row))
         {
-            moveRowsDown(i);
+            moveRowsDown(row);
+            finishedRows++;
         }
     }
+
+    return finishedRows;
 }
 
 bool Grid::isTileAt(int posY, int posX)
@@ -131,4 +136,18 @@ bool Grid::isGameOver(const Block& block)
             return true;
     }
     return false;
+}
+
+bool Grid::isClearedGrid()
+{
+    for (int row = 0; row < Utils::Config::numOfRows; row++)
+    {
+        for (int col = 0; col < Utils::Config::numOfCols; col++)
+        {
+            if (isTileAt(row, col))
+                return false;    
+        }
+    }
+    
+    return true;
 }

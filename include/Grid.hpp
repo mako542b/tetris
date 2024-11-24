@@ -16,13 +16,14 @@ public:
     void removeTile(int posX, int posY);
     void lockBlock(const Block& block);
     bool isCollisionY(const Block& block);
-    void handleFullRows();
+    int clearFullRows();
     bool isRowFinished(int row);
     void moveRowsDown(int startRow);
     bool isCollisionLeft(const Block& block, bool rowAligned);
     bool isCollisionRight(const Block& block, bool rowAligned);
     bool isTileAt(int posY, int posX);
     bool isGameOver(const Block& block);
+    bool isClearedGrid();
 
 
 private:

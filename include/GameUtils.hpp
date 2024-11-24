@@ -18,11 +18,12 @@ struct Config
     static constexpr int paddingXLeft = 40;
     static constexpr int gameGridSizeX = tileSizeX * numOfCols;
     static constexpr int gameGridSizeY = tileSizeY * (numOfRows - numOfInvRows);
-    static constexpr int infoBoxSize = 200;
+    static constexpr int infoBoxSizeX = 100;
     static constexpr int gameWindowSizeY = gameGridSizeY + paddingYTop + paddingYBottom;
-    static constexpr int gameWindowSizeX = gameGridSizeX + paddingXLeft + infoBoxSize;
+    static constexpr int gameWindowSizeX = gameGridSizeX + paddingXLeft + infoBoxSizeX;
 };
 
-void drawTile(int startPosX, int startPosY, const Color& color, int pixelOffsetY = 0, int height = Config::tileSizeY);
+void drawGameTile(int startPosX, int startPosY, const Color& color, int pixelOffsetY = 0, int height = Config::tileSizeY);
+void drawInfoTile(int startPosX, int startPosY, const Color& color);
 
 }
