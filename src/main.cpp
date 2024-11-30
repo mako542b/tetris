@@ -1,10 +1,11 @@
 #include <iostream>
-#include <raylib.h>
-#include <rlgl.h>
-#include <Grid.hpp>
-#include <Block.hpp>
 #include <string>
-#include <Game.hpp>
+
+#include "raylib.h"
+#include "rlgl.h"
+#include "Grid.hpp"
+#include "Block.hpp"
+#include "Game.hpp"
 #include "GameUtils.hpp"
 #include "Renderer.hpp"
 

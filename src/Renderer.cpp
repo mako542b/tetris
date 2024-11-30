@@ -7,13 +7,14 @@ void Renderer::Render(const Game& game)
     drawCurrentBlock(game);
     drawProjection(game);
     drawNextBlock(game);
+    drawInfo(game);
 }
 
 void Renderer::drawCurrentBlock(const Game& game)
 {
     auto& block = game.getBlock();
     auto& gameData = game.getGameData();
-    auto& currentLayer = block.getCurrentPositions();
+    auto currentLayer = block.getCurrentPositions();
     auto color = getBlockColor(block.getBlockID());
 
     for (auto tile : currentLayer) 

@@ -16,13 +16,13 @@ public:
     void lockBlock(const Block& block);
     bool isCollisionY(const Block& block) const;
     int clearFullRows();
-    bool isRowFinished(int row);
+    bool isRowFinished(int row) const;
     void moveRowsDown(int startRow);
-    bool isCollisionLeft(const Block& block, bool rowAligned);
-    bool isCollisionRight(const Block& block, bool rowAligned);
+    bool isCollisionLeft(const Block& block, bool rowAligned) const;
+    bool isCollisionRight(const Block& block, bool rowAligned) const;
     bool isTileAt(int posY, int posX) const;
-    bool isGameOver(const Block& block);
-    bool isClearedGrid();
+    bool isGameOver(const Block& block) const;
+    bool isClearedGrid() const;
 
     inline BlockID getTileBlockID(int posY, int posX) const { return m_cubesGrid[posY][posX]; }
 

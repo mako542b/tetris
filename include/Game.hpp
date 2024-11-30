@@ -23,15 +23,15 @@ public:
     void blockMoveRight();
     void handleBlockMoveX();
     void handleRotate();
-    bool canBlockRotate(bool clockWise, Block::position offsetX = {0, 0});
+    bool canBlockRotate(bool clockWise, Block::position offsetX = {0, 0}) const;
     void tryRotate(bool isClockWise);
     void getNewBlock();
     void blockMoveDown();
-    int checkFinishedRows();
+    int handleFinishedRows();
     void setProjectedPosition(Block& block) const;
     void hardDrop(Block& block);
     void handleScore(int finishedRows);
-    bool isTSpin();
+    bool isTSpin() const;
 
     inline const Block& getBlock() const { return *m_currentBlock; }
     inline const Block& getNextBlock() const { return *m_nextBlock; }

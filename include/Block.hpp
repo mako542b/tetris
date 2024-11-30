@@ -27,17 +27,17 @@ public:
 
     void moveLeft();
     void moveRight();
-    std::array<Block::position, 4> getCCWPositions();
-    std::array<Block::position, 4> getCWPositions();
+    std::array<Block::position, 4> getCCWPositions() const;
+    std::array<Block::position, 4> getCWPositions() const;
     void moveOffset(position offset);
     virtual std::unique_ptr<Block> clone() const = 0;
-    const std::array<position, 4> getCurrentPositions() const;
-    const std::array<position, 4> getCurrentAbsPositions() const;
+    std::array<position, 4> getCurrentPositions() const;
+    std::array<position, 4> getCurrentAbsPositions() const;
 
-    inline bool getIsHardDropped() { return m_isHardDropped; }
+    inline bool getIsHardDropped() const { return m_isHardDropped; }
     inline void setIsHarddropped() { m_isHardDropped = true; }
     inline void setHarddroppedRows(int rows) { m_hardDroppedRows = rows; }
-    inline int getHarddroppedRows() { return m_hardDroppedRows; }
+    inline int getHarddroppedRows() const { return m_hardDroppedRows; }
     inline BlockID getBlockID() const { return m_blockID; }
 
 

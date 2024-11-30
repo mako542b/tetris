@@ -1,8 +1,8 @@
-#include <Grid.hpp>
-#include <raylib.h>
+#include "Grid.hpp"
+#include "raylib.h"
 #include <iostream>
-#include <Block.hpp>
-#include <GameUtils.hpp>
+#include "Block.hpp"
+#include "GameUtils.hpp"
 
 void Grid::addTile(int posX, int posY, BlockID color)
 {
@@ -40,7 +40,7 @@ bool Grid::isCollisionY(const Block& block) const
     return false;
 }
 
-bool Grid::isCollisionLeft(const Block& block, bool rowAligned)
+bool Grid::isCollisionLeft(const Block& block, bool rowAligned) const
 {
     auto positions = block.getCurrentPositions();
 
@@ -56,7 +56,7 @@ bool Grid::isCollisionLeft(const Block& block, bool rowAligned)
     return false;
 }
 
-bool Grid::isCollisionRight(const Block& block, bool rowAligned)
+bool Grid::isCollisionRight(const Block& block, bool rowAligned) const
 {
     auto positions = block.getCurrentPositions();
 
@@ -81,7 +81,7 @@ void Grid::moveRowsDown(int startRow)
     m_cubesGrid[0] = {};
 }
 
-bool Grid::isRowFinished(int row)
+bool Grid::isRowFinished(int row) const
 {
     for (int col = 0; col < Utils::Config::numOfCols; col++)
     {
@@ -113,7 +113,7 @@ bool Grid::isTileAt(int posY, int posX) const
     return m_cubesGrid[posY][posX];
 }
 
-bool Grid::isGameOver(const Block& block)
+bool Grid::isGameOver(const Block& block) const
 {
     auto positions = block.getCurrentPositions();
 
@@ -125,7 +125,7 @@ bool Grid::isGameOver(const Block& block)
     return false;
 }
 
-bool Grid::isClearedGrid()
+bool Grid::isClearedGrid() const
 {
     for (int row = 0; row < Utils::Config::numOfRows; row++)
     {

@@ -1,6 +1,6 @@
-#include <Block.hpp>
-#include <raylib.h>
-#include <GameUtils.hpp>
+#include "Block.hpp"
+#include "raylib.h"
+#include "GameUtils.hpp"
 
 void Block::changeState(bool clockWise)
 {
@@ -9,7 +9,7 @@ void Block::changeState(bool clockWise)
         (m_rotationState + (m_positions.size() - 1)) % m_positions.size();
 }
 
-const std::array<Block::position, 4> Block::getCurrentPositions() const
+std::array<Block::position, 4> Block::getCurrentPositions() const
 {
     auto positions = m_positions[m_rotationState];
     for (auto& cube : positions)
@@ -20,12 +20,12 @@ const std::array<Block::position, 4> Block::getCurrentPositions() const
     return positions;
 }
 
-const std::array<Block::position, 4> Block::getCurrentAbsPositions() const
+std::array<Block::position, 4> Block::getCurrentAbsPositions() const
 {
     return m_positions[m_rotationState];
 }
 
-std::array<Block::position, 4> Block::getCCWPositions()
+std::array<Block::position, 4> Block::getCCWPositions() const
 {   
     int ccwIndex = (m_rotationState + m_positions.size() - 1) % m_positions.size();
     auto ccwPositions = m_positions[ccwIndex];
@@ -39,7 +39,7 @@ std::array<Block::position, 4> Block::getCCWPositions()
     return ccwPositions;
 }
 
-std::array<Block::position, 4> Block::getCWPositions()
+std::array<Block::position, 4> Block::getCWPositions() const
 {   
     int cwIndex = (m_rotationState + 1) % m_positions.size();
         auto ccwPositions = m_positions[cwIndex];

@@ -19,7 +19,7 @@ void Game::GameLoop()
     {
         if (handleCollisionY())
         {
-            int finishedRows = checkFinishedRows();
+            int finishedRows = handleFinishedRows();
             handleScore(finishedRows);
             getNewBlock();
 
@@ -77,7 +77,7 @@ void Game::handleBlockMoveX()
     }
 }
 
-bool Game::canBlockRotate(bool clockWise, Block::position offset)
+bool Game::canBlockRotate(bool clockWise, Block::position offset) const
 {
     auto positions = clockWise ?  m_currentBlock->getCWPositions() : m_currentBlock->getCCWPositions();
 
@@ -226,7 +226,7 @@ void Game::blockMoveDown()
     }
 }
 
-int Game::checkFinishedRows()
+int Game::handleFinishedRows()
 {
     return m_grid.clearFullRows();
 }
@@ -241,7 +241,7 @@ void Game::handleScore(int finishedRows)
     m_gameData.handleScore(info);
 }
 
-bool Game::isTSpin()
+bool Game::isTSpin() const
 {
     if (m_currentBlock->m_blockID != BlockID::T_BLOCK || m_currentBlock->m_rotationState != 2)
         return false;
