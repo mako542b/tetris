@@ -8,6 +8,27 @@ project(TetrisGame VERSION 1.0)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
+# Step 1: Find cppcheck executable
+find_program(CPPCHECK_EXECUTABLE cppcheck)
+
+# Step 2: Check if cppcheck was found
+if(CPPCHECK_EXECUTABLE)
+    message(STATUS "Cppcheck found at ${CPPCHECK_EXECUTABLE}")
+    
+    # Step 3: Set additional flags for cppcheck
+    set(CPPCHECK_FLAGS --enable=all --inconclusive --max-configs=100 --verbose --force)
+
+    # Step 4: Add a custom target to run cppcheck
+    add_custom_target(
+        cppcheck
+        COMMAND ${CPPCHECK_EXECUTABLE} ${CPPCHECK_FLAGS} ${CMAKE_SOURCE_DIR}/src
+        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+        COMMENT "Running cppcheck static analysis"
+    )
+else()
+    message(WARNING "Cppcheck not found. Skipping static analysis.")
+endif()
+
 # Include the headers in the "include" directory
 include_directories(include)
 
