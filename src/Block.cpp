@@ -12,10 +12,10 @@ void Block::changeState(bool clockWise)
 std::array<Block::position, 4> Block::getCurrentPositions() const
 {
     auto positions = m_positions[m_rotationState];
-    for (auto& cube : positions)
+    for (auto& tile : positions)
     {
-        cube.posX += m_offsetX;
-        cube.posY += m_offsetY;
+        tile.posX += m_offsetX;
+        tile.posY += m_offsetY;
     }
     return positions;
 }
@@ -30,10 +30,10 @@ std::array<Block::position, 4> Block::getCCWPositions() const
     int ccwIndex = (m_rotationState + m_positions.size() - 1) % m_positions.size();
     auto ccwPositions = m_positions[ccwIndex];
 
-    for (auto& cube : ccwPositions)
+    for (auto& tile : ccwPositions)
     {
-        cube.posX += m_offsetX;
-        cube.posY += m_offsetY;
+        tile.posX += m_offsetX;
+        tile.posY += m_offsetY;
     }
 
     return ccwPositions;
@@ -44,10 +44,10 @@ std::array<Block::position, 4> Block::getCWPositions() const
     int cwIndex = (m_rotationState + 1) % m_positions.size();
         auto ccwPositions = m_positions[cwIndex];
 
-    for (auto& cube : ccwPositions)
+    for (auto& tile : ccwPositions)
     {
-        cube.posX += m_offsetX;
-        cube.posY += m_offsetY;
+        tile.posX += m_offsetX;
+        tile.posY += m_offsetY;
     }
 
     return ccwPositions;

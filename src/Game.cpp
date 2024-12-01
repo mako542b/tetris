@@ -7,35 +7,30 @@ void Game::GameLoop()
 
     if (m_isGameOver)
     {
-        DrawText("GAME OVER!", 20, 20, 20, BLACK);
-
         if (IsKeyDown(KEY_N))
         {
             m_grid = {};
             m_isGameOver = false;
         }
     }
+    else if (handleCollisionY())
+    {
+        int finishedRows = handleFinishedRows();
+        handleScore(finishedRows);
+        getNewBlock();
+
+        if (m_grid.isGameOver(*m_currentBlock))
+            m_isGameOver = true;
+
+    }
     else
     {
-        if (handleCollisionY())
-        {
-            int finishedRows = handleFinishedRows();
-            handleScore(finishedRows);
-            getNewBlock();
-
-            if (m_grid.isGameOver(*m_currentBlock))
-            {
-                m_isGameOver = true;
-            }
-        }
-        else
-        {
-            blockMoveDown();
-            handleBlockMoveX();
-            handleRotate();
-        }
+        blockMoveDown();
+        handleBlockMoveX();
+        handleRotate();
     }
 }
+
 
 void Game::handleBlockMoveX()
 {
@@ -86,7 +81,7 @@ bool Game::canBlockRotate(bool clockWise, Block::position offset) const
         int posX = position.posX + offset.posX;
         int posY = position.posY + offset.posY;
 
-        if (posX >= Utils::Config::numOfCols || posX < 0 || position.posY >= Utils::Config::numOfRows)
+        if (posX >= Config::numOfCols || posX < 0 || position.posY >= Config::numOfRows)
             return false;
         
         if (m_grid.isTileAt(posY, posX))
@@ -190,6 +185,13 @@ void Game::setProjectedPosition(Block& block) const
     }
 }
 
+std::unique_ptr<Block> Game::getProjectedBlock() const
+{
+    std::unique_ptr<Block> projectedBlock = getBlock().clone();
+    setProjectedPosition(*projectedBlock);
+    return projectedBlock;
+}
+
 void Game::hardDrop(Block& block)
 {
     int hardDroppedRows = 0;
@@ -258,9 +260,9 @@ bool Game::isTSpin() const
             int cornerYPos = pivot.posY + offsetsY;
             int cornerXPos = pivot.posX + offsetsX;
 
-            if (cornerYPos >= Utils::Config::numOfRows ||
+            if (cornerYPos >= Config::numOfRows ||
                 cornerXPos < 0 ||
-                cornerXPos >= Utils::Config::numOfCols||
+                cornerXPos >= Config::numOfCols||
                 m_grid.isTileAt(cornerYPos, cornerXPos
             ))
                 occupiedCorners++;

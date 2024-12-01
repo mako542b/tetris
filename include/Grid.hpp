@@ -31,5 +31,5 @@ private:
     static const int numOfColors = 5;
 
 private:
-    std::array<std::array<BlockID, Utils::Config::numOfCols>, Utils::Config::numOfRows> m_cubesGrid = {};
+    std::array<std::array<BlockID, Config::numOfCols>, Config::numOfRows> m_cubesGrid = {};
 };

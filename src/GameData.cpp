@@ -48,5 +48,5 @@ void GameData::handleScore(ScoreInfo_t info)
 int GameData::getBlockRowPixelOffset() const
 {
     float interval = getGravityInterval();
-    return static_cast<int>(((interval - m_nextGravityMove) / interval) * Utils::Config::tileSizeY);
+    return static_cast<int>(((interval - m_nextGravityMove) / interval) * Config::tileSizeY);
 }

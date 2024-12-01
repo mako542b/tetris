@@ -23,7 +23,7 @@ inline const Color getBlockColor(BlockID block)
     switch (block)
     {
         case EMPTY_CELL:
-            return DARKBROWN;
+            return DARKGRAY;
         case I_BLOCK:
             return CUSTOM_CYAN;
         case O_BLOCK:

@@ -30,7 +30,7 @@ bool Grid::isCollisionY(const Block& block) const
 
     for (auto& position : positions)
     {
-        if (position.posY + 1 == Utils::Config::numOfRows)
+        if (position.posY + 1 == Config::numOfRows)
             return true;
         
         if (isTileAt(position.posY + 1, position.posX))
@@ -62,7 +62,7 @@ bool Grid::isCollisionRight(const Block& block, bool rowAligned) const
 
     for (auto& position : positions)
     {
-        bool isWallColl = position.posX + 1 >= Utils::Config::numOfCols;
+        bool isWallColl = position.posX + 1 >= Config::numOfCols;
         bool isCurrentRowColl = isTileAt(position.posY, position.posX + 1);
         bool isNextRowColl = isTileAt(position.posY + 1, position.posX + 1) && !rowAligned;
 
@@ -83,7 +83,7 @@ void Grid::moveRowsDown(int startRow)
 
 bool Grid::isRowFinished(int row) const
 {
-    for (int col = 0; col < Utils::Config::numOfCols; col++)
+    for (int col = 0; col < Config::numOfCols; col++)
     {
         if (!isTileAt(row, col))
             return false;
@@ -96,7 +96,7 @@ int Grid::clearFullRows()
 {
     int finishedRows = 0;
 
-    for (int row = 0; row < Utils::Config::numOfRows; row++)
+    for (int row = 0; row < Config::numOfRows; row++)
     {
         if (isRowFinished(row))
         {
@@ -127,9 +127,9 @@ bool Grid::isGameOver(const Block& block) const
 
 bool Grid::isClearedGrid() const
 {
-    for (int row = 0; row < Utils::Config::numOfRows; row++)
+    for (int row = 0; row < Config::numOfRows; row++)
     {
-        for (int col = 0; col < Utils::Config::numOfCols; col++)
+        for (int col = 0; col < Config::numOfCols; col++)
         {
             if (isTileAt(row, col))
                 return false;    

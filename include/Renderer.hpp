@@ -5,13 +5,21 @@
 class Renderer
 {
 public:
-    void Render(const Game& game);
+    static void Render(const Game& game);
 
-    void drawCurrentBlock(const Game& game);
-    void drawGrid(const Game& game);
-    void drawInfo(const Game& game);
-    void drawProjection(const Game& game);
-    void drawNextBlock(const Game& game);
+    static void drawGameWindow(const Game& game);
+    static void drawInfoWindow(const Game& game);
+
+
+    static void drawCurrentBlock(const Game& game);
+    static void drawGrid(const Game& game);
+    static void drawProjection(const Game& game);
+    static void drawNextBlock(const Game& game);
+    static void displayScore(const Game& game);
+    static void displayLevel(const Game& game);
+    static void handleGameOverWindow(const Game& game);
+
+
 
 
 };

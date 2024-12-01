@@ -6,14 +6,6 @@
 #include <memory>
 #include "GameData.hpp"
 
-enum class TSpinType
-{
-    NONE = 0,
-    MINI,
-    CLASSIC,
-    TRIPLE
-};
-
 class Game
 {
 public:
@@ -32,11 +24,14 @@ public:
     void hardDrop(Block& block);
     void handleScore(int finishedRows);
     bool isTSpin() const;
+    std::unique_ptr<Block> getProjectedBlock() const;
+
 
     inline const Block& getBlock() const { return *m_currentBlock; }
     inline const Block& getNextBlock() const { return *m_nextBlock; }
     inline const Grid& getGrid() const { return m_grid; }
     inline const GameData& getGameData() const { return m_gameData; }
+    inline const bool getIsGameOver() const { return m_isGameOver; }
 
 
     Game() { getNewBlock(); }

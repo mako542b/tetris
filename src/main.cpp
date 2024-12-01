@@ -11,20 +11,17 @@
 
 int main()
 {
-    InitWindow(Utils::Config::gameWindowSizeX, Utils::Config::gameWindowSizeY, "Tetris");
+    InitWindow(Config::appWindowSizeX, Config::appWindowSizeY, "Tetris");
     SetTargetFPS(60);
     
     Game game;
-    Renderer renderer;
 
     while (!WindowShouldClose())
     {
         BeginDrawing();
         ClearBackground(DARKGRAY);
-        
         game.GameLoop();
-        renderer.Render(game);
-
+        Renderer::Render(game);
         EndDrawing();
     }
 
