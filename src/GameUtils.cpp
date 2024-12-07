@@ -16,8 +16,8 @@ void drawGameTile(int startPosX, int startPosY, const Color& color, int pixelOff
     DrawRectangle(
         startPosX * Config::tileSizeX + Config::tilePadding + Config::gamePaddingLeft,
         totalStartPosY,
-        Config::tileSizeX,// - Config::tilePadding,
-        height,// - Config::tilePadding,
+        Config::tileSizeX,
+        height,
         color
     );
 

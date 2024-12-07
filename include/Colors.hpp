@@ -18,7 +18,7 @@ enum BlockID
     COUNT
 };
 
-inline const Color getBlockColor(BlockID block)
+inline Color getBlockColor(BlockID block)
 {
     switch (block)
     {

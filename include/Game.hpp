@@ -32,6 +32,8 @@ public:
     inline const Grid& getGrid() const { return m_grid; }
     inline const GameData& getGameData() const { return m_gameData; }
     inline const bool getIsGameOver() const { return m_isGameOver; }
+    inline void resetGame() { *this = Game(); }
+
 
 
     Game() { getNewBlock(); }

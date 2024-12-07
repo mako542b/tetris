@@ -14,10 +14,13 @@ void Renderer::handleGameOverWindow(const Game& game)
     if (!game.getIsGameOver())
         return;
 
-    constexpr int teksFond = 40;
+    constexpr int tekst1Fond = 40;
+    constexpr int tekst2Fond = 25;
 
-    const char* text = "Game Over!";
-    int tekstLen = MeasureText(text, teksFond);
+    const char* text1 = "Game Over!";
+    const char* text2 = "press n to restart";
+    int tekst1Len = MeasureText(text1, tekst1Fond);
+    int tekst2Len = MeasureText(text2, tekst2Fond);
 
     DrawRectangle(
         0,
@@ -28,10 +31,18 @@ void Renderer::handleGameOverWindow(const Game& game)
     );
 
     DrawText(
-        text,
-        (Config::gameWindowSizeX - tekstLen) / 2,
+        text1,
+        (Config::gameWindowSizeX - tekst1Len) / 2,
+        Config::gameWindowSizeY / 2 - tekst1Fond,
+        tekst1Fond,
+        BLACK
+    );
+
+        DrawText(
+        text2,
+        (Config::gameWindowSizeX - tekst2Len) / 2,
         Config::gameWindowSizeY / 2,
-        teksFond,
+        tekst2Fond,
         BLACK
     );
 }

@@ -1,6 +1,5 @@
 #pragma once
 
-#include <raylib.h>
 #include <array>
 #include <GameUtils.hpp>
 #include <Colors.hpp>

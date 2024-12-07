@@ -1,16 +1,16 @@
 #include "Game.hpp"
 #include <cstdlib>
 #include <iostream>
+#include "Controllers.hpp"
 
 void Game::GameLoop()
 {
 
     if (m_isGameOver)
     {
-        if (IsKeyDown(KEY_N))
+        if (Controllers::inputNewGame())
         {
-            m_grid = {};
-            m_isGameOver = false;
+            resetGame();
         }
     }
     else if (handleCollisionY())
@@ -20,8 +20,9 @@ void Game::GameLoop()
         getNewBlock();
 
         if (m_grid.isGameOver(*m_currentBlock))
+        {
             m_isGameOver = true;
-
+        }
     }
     else
     {
@@ -31,17 +32,16 @@ void Game::GameLoop()
     }
 }
 
-
 void Game::handleBlockMoveX()
 {
-    static float nextKeyUpdate = 0.2f; //todo move to gamaData
+    static float nextKeyUpdate = 0.2f;
 
-    if (IsKeyPressed(KEY_LEFT))
+    if (Controllers::inputMoveLeftPressed())
     {
         blockMoveLeft();
         nextKeyUpdate = 0.15f;
     }
-    else if (IsKeyDown(KEY_LEFT))
+    else if (Controllers::inputMoveLeftDown())
     {
         if (nextKeyUpdate <= 0.0f)
         {
@@ -53,12 +53,12 @@ void Game::handleBlockMoveX()
             nextKeyUpdate -= GetFrameTime();
         }
     }
-    else if (IsKeyPressed(KEY_RIGHT))
+    else if (Controllers::inputMoveRightPressed())
     {
         blockMoveRight();
         nextKeyUpdate = 0.15f;
     }
-    else if (IsKeyDown(KEY_RIGHT))
+    else if (Controllers::inputMoveRightDown())
     {
         if (nextKeyUpdate <= 0.0f)
         {
@@ -92,11 +92,11 @@ bool Game::canBlockRotate(bool clockWise, Block::position offset) const
 
 void Game::handleRotate()
 {
-    if (IsKeyPressed(KEY_X))
+    if (Controllers::inputRotateCW())
     {
         tryRotate(true);
     }
-    else if (IsKeyPressed(KEY_Z))
+    else if (Controllers::inputRotateCCW())
     {
         tryRotate(false);
     }
@@ -160,7 +160,7 @@ void Game::blockMoveRight()
 
 void Game::getNewBlock()
 {
-    int random = rand() % (BlockID::COUNT - 1) + 1;
+    int random = GetRandomValue(1, BlockID::COUNT - 1);
     BlockID randomBlockId = static_cast<BlockID>(random);
 
     if (!m_nextBlock)
@@ -212,12 +212,12 @@ void Game::blockMoveDown()
     if (m_grid.isCollisionY(*m_currentBlock))
         return;
 
-    if (IsKeyPressed(KEY_SPACE))
+    if (Controllers::inputHardDrop())
     {
         hardDrop(*m_currentBlock);
         m_gameData.resetNextGravityMove();
     }
-    else if(m_gameData.getNextGravityMove() <= 0 || IsKeyDown(KEY_DOWN))
+    else if(m_gameData.getNextGravityMove() <= 0 || Controllers::inputMoveDown())
     {
         m_currentBlock->moveY();
         m_gameData.resetNextGravityMove();

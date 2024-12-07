@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Block.hpp"
-#include "raylib.h"
 
 typedef struct ScoreInfo
 {
