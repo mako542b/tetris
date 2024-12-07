@@ -33,8 +33,8 @@ void drawGameTile(int startPosX, int startPosY, const Color& color, int pixelOff
 
 void drawInfoTile(int startPosX, int startPosY, int xTileCount, const Color& color)
 {
-    int posY = startPosY * Config::tileSizeY + Config::gamePaddingTop + 80 + Config::tilePadding;
-    int posX = startPosX * Config::tileSizeX + Config::gameWindowSizeX + Config::tilePadding +
+    int posY = startPosY * Config::tileSizeY + Config::gamePaddingTop + 80;
+    int posX = startPosX * Config::tileSizeX + Config::gameWindowSizeX +
         Config::infoBoxSizeX / 2 - xTileCount * (Config::tileSizeX / 2);
     
     DrawRectangle(
@@ -50,7 +50,7 @@ void drawInfoTile(int startPosX, int startPosY, int xTileCount, const Color& col
         posY,
         Config::tileSizeX,
         Config::tileSizeY,
-        Color{50, 50, 50, 100}
+        Color{50, 50, 50, 150}
     );
     
 }

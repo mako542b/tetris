@@ -3,6 +3,7 @@
 
 void Renderer::Render(const Game& game)
 {
+    ClearBackground(DARKGRAY);
     drawGameWindow(game);
     drawInfoWindow(game);
     handleGameOverWindow(game);
@@ -137,7 +138,7 @@ void Renderer::drawProjection(const Game& game)
 {
     std::unique_ptr<Block> projectedBlock = game.getProjectedBlock();
     auto currentLayer = projectedBlock->getCurrentPositions();
-    Color projectionColor = Color{255, 255, 255, 100};
+    Color projectionColor = Color{255, 255, 200, 40};
 
     for (auto cube : currentLayer)
     {

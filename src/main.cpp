@@ -19,7 +19,6 @@ int main()
     while (!WindowShouldClose())
     {
         BeginDrawing();
-        ClearBackground(DARKGRAY);
         game.GameLoop();
         Renderer::Render(game);
         EndDrawing();
