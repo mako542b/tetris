@@ -14,4 +14,6 @@ public:
     static bool inputRotateCW() { return IsKeyPressed(KEY_X); }
     static bool inputRotateCCW() { return IsKeyPressed(KEY_Z); }
     static bool inputNewGame() { return IsKeyPressed(KEY_N); }
+    static bool inputTogglePause() { return IsKeyPressed(KEY_O) || IsKeyPressed(KEY_ZERO); }
+    static bool inputToggleProjection() { return IsKeyPressed(KEY_P); }
 };

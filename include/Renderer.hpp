@@ -15,4 +15,6 @@ public:
     static void displayScore(const Game& game);
     static void displayLevel(const Game& game);
     static void handleGameOverWindow(const Game& game);
+    static void handleDisplayOptions(const Game& game);
+    static void optionsButtonInfo();
 };

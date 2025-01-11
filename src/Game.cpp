@@ -3,6 +3,16 @@
 #include <iostream>
 #include "Controllers.hpp"
 
+bool Game::handlePause()
+{
+    if (Controllers::inputTogglePause())
+    {
+        m_isPaused = !m_isPaused;
+    }
+
+    return m_isPaused;
+}
+
 void Game::GameLoop()
 {
 
@@ -12,8 +22,16 @@ void Game::GameLoop()
         {
             resetGame();
         }
+
+        return;
     }
-    else if (handleCollisionY())
+
+    if (handlePause())
+    {
+        return;
+    }
+
+    if (handleCollisionY())
     {
         int finishedRows = handleFinishedRows();
         handleScore(finishedRows);
@@ -29,7 +47,14 @@ void Game::GameLoop()
         blockMoveDown();
         handleBlockMoveX();
         handleRotate();
+        handleOptionsInput();
     }
+}
+
+void Game::handleOptionsInput()
+{
+    if (Controllers::inputToggleProjection())
+        m_isProjection = !m_isProjection;
 }
 
 void Game::handleBlockMoveX()
@@ -113,7 +138,7 @@ void Game::tryRotate(bool isClockWise)
 
         m_currentBlock->changeState(isClockWise);
         m_currentBlock->moveOffset(offset);
-        
+
         return;
     }
 }

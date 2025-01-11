@@ -10,6 +10,7 @@ class Game
 {
 public:
     Game() { getNewBlock(); }
+    bool handlePause();
     bool handleCollisionY();
     void GameLoop();
     void blockMoveLeft();
@@ -24,6 +25,7 @@ public:
     void setProjectedPosition(Block& block) const;
     void hardDrop(Block& block);
     void handleScore(int finishedRows);
+    void handleOptionsInput();
     bool isTSpin() const;
     std::unique_ptr<Block> getProjectedBlock() const;
 
@@ -31,13 +33,17 @@ public:
     inline const Block& getNextBlock() const { return *m_nextBlock; }
     inline const Grid& getGrid() const { return m_grid; }
     inline const GameData& getGameData() const { return m_gameData; }
-    inline const bool getIsGameOver() const { return m_isGameOver; }
     inline void resetGame() { *this = Game(); }
+    inline bool getIsPaused() const { return m_isPaused; }
+    inline bool getIsGameOver() const { return m_isGameOver; }
+    inline bool getIsProjection() const { return m_isProjection; }
 
 private:
     Grid m_grid;
     std::unique_ptr<Block> m_currentBlock;
     std::unique_ptr<Block> m_nextBlock;
-    bool m_isGameOver = false;
     GameData m_gameData;
+    bool m_isGameOver = false;
+    bool m_isPaused = false;
+    bool m_isProjection = true;
 };
