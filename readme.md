@@ -8,7 +8,7 @@
 - Cmake, min version 3.14
 
 ## Build:
-Should be system/compiler generic, but so far tested with windows/MSVC:  
+Should work for most general systems/compilers, but tested so far with windows/MSVC:  
 - git clone https://github.com/mako542b/tetris
 - cd tetris/build
 - cmake ..
