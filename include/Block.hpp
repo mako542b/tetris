@@ -13,7 +13,6 @@ class Block
 friend class Grid;
 
 public:
-
     virtual ~Block() = default;
 
     struct position {
@@ -22,9 +21,7 @@ public:
     };
 
     void changeState(bool clockWise);
-
     void moveY();
-
     void moveLeft();
     void moveRight();
     std::array<Block::position, 4> getCCWPositions() const;
@@ -40,18 +37,14 @@ public:
     inline int getHarddroppedRows() const { return m_hardDroppedRows; }
     inline BlockID getBlockID() const { return m_blockID; }
 
-
 public:
-
     bool m_isHardDropped = false;
     int m_hardDroppedRows = 0;
     BlockID m_blockID;
     int m_rotationState = 0;
 
 protected:
-
     int m_offsetX = 5;
     int m_offsetY = 0;
     std::vector<std::array<position, 4>> m_positions;
-
 };

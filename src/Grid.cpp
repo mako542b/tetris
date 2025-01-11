@@ -53,6 +53,7 @@ bool Grid::isCollisionLeft(const Block& block, bool rowAligned) const
         if (isWallColl || isCurrentRowColl || isNextRowColl)
             return true;
     }
+
     return false;
 }
 
@@ -69,6 +70,7 @@ bool Grid::isCollisionRight(const Block& block, bool rowAligned) const
         if (isWallColl || isCurrentRowColl || isNextRowColl)
             return true;
     }
+
     return false;
 }
 
@@ -78,6 +80,7 @@ void Grid::moveRowsDown(int startRow)
     {
         m_cubesGrid[row] = m_cubesGrid[row - 1];
     }
+
     m_cubesGrid[0] = {};
 }
 
@@ -122,6 +125,7 @@ bool Grid::isGameOver(const Block& block) const
         if (isTileAt(position.posY, position.posX))
             return true;
     }
+    
     return false;
 }
 

@@ -12,11 +12,13 @@ void Block::changeState(bool clockWise)
 std::array<Block::position, 4> Block::getCurrentPositions() const
 {
     auto positions = m_positions[m_rotationState];
+    
     for (auto& tile : positions)
     {
         tile.posX += m_offsetX;
         tile.posY += m_offsetY;
     }
+
     return positions;
 }
 

@@ -25,9 +25,6 @@ struct Config
 
 namespace Utils
 {
-
-
 void drawGameTile(int startPosX, int startPosY, const Color& color, int pixelOffsetY = 0, int height = Config::tileSizeY);
 void drawInfoTile(int startPosX, int startPosY, int xTileCount, const Color& color);
-
 }

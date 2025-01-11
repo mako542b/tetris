@@ -49,9 +49,7 @@ void Renderer::handleGameOverWindow(const Game& game)
 
 void Renderer::drawGameWindow(const Game& game)
 {
-    // draw background
     DrawRectangle(0, 0, Config::gameWindowSizeX, Config::gameWindowSizeY, CLITERAL(Color){0, 0, 0, 150});
-
     drawGrid(game);
     drawProjection(game);
     drawCurrentBlock(game);

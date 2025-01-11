@@ -25,7 +25,6 @@ public:
 
     inline BlockID getTileBlockID(int posY, int posX) const { return m_cubesGrid[posY][posX]; }
 
-
 private:
     static const int numOfColors = 5;
 

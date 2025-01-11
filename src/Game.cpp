@@ -113,6 +113,7 @@ void Game::tryRotate(bool isClockWise)
 
         m_currentBlock->changeState(isClockWise);
         m_currentBlock->moveOffset(offset);
+        
         return;
     }
 }
