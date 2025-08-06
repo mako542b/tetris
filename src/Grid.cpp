@@ -30,9 +30,6 @@ bool Grid::isCollisionY(const Block& block) const
 
     for (auto& position : positions)
     {
-        if (position.posY + 1 == Config::numOfRows)
-            return true;
-        
         if (isTileAt(position.posY + 1, position.posX))
             return true;
     }
@@ -46,11 +43,10 @@ bool Grid::isCollisionLeft(const Block& block, bool rowAligned) const
 
     for (auto& position : positions)
     {
-        bool isWallColl = position.posX - 1 < 0;
         bool isCurrentRowColl = isTileAt(position.posY, position.posX - 1);
         bool isNextRowColl = isTileAt(position.posY + 1, position.posX - 1) && !rowAligned;
 
-        if (isWallColl || isCurrentRowColl || isNextRowColl)
+        if (isCurrentRowColl || isNextRowColl)
             return true;
     }
 
@@ -63,11 +59,10 @@ bool Grid::isCollisionRight(const Block& block, bool rowAligned) const
 
     for (auto& position : positions)
     {
-        bool isWallColl = position.posX + 1 >= Config::numOfCols;
         bool isCurrentRowColl = isTileAt(position.posY, position.posX + 1);
         bool isNextRowColl = isTileAt(position.posY + 1, position.posX + 1) && !rowAligned;
 
-        if (isWallColl || isCurrentRowColl || isNextRowColl)
+        if (isCurrentRowColl || isNextRowColl)
             return true;
     }
 
@@ -113,6 +108,9 @@ int Grid::clearFullRows()
 
 bool Grid::isTileAt(int posY, int posX) const
 {
+    if (posY >= Config::numOfRows || posX < 0 || posX >= Config::numOfCols)
+        return true;
+
     return m_cubesGrid[posY][posX];
 }
 

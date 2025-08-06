@@ -192,7 +192,7 @@ void Game::getNewBlock()
     if (!m_nextBlock)
     {
         m_currentBlock = getSubBlock(randomBlockId);
-        random = rand() % (BlockID::COUNT - 1) + 1;
+        random = GetRandomValue(1, BlockID::COUNT - 1);
         randomBlockId = static_cast<BlockID>(random);
     }
     else

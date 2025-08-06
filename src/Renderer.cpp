@@ -135,7 +135,9 @@ void Renderer::displayScore(const Game& game)
 {
     int startPosX = Config::gameWindowSizeX + Config::infoBoxSizeX / 2;
     int startPosY = Config::gamePaddingTop + 150;
-    const char* score = std::to_string( game.getGameData().getScore()).c_str();
+
+    std::string scoreStr = std::to_string(game.getGameData().getScore());
+    const char* score = scoreStr.c_str();
 
     DrawText("Score:", startPosX - MeasureText("Score:", 20) / 2, startPosY, 20, BLACK);
     DrawText(score, startPosX - MeasureText(score, 20) / 2, startPosY + 30, 20, BLACK);
@@ -145,7 +147,8 @@ void Renderer::displayLevel(const Game& game)
 {
     int startPosX = Config::gameWindowSizeX + Config::infoBoxSizeX / 2;
     int startPosY = Config::gamePaddingTop + 220;
-    const char* level = std::to_string( game.getGameData().getLevel()).c_str();
+    std::string levelStr = std::to_string(game.getGameData().getLevel());
+    const char* level = levelStr.c_str();
 
     DrawText("Level:", startPosX - MeasureText("Level:", 20) / 2, startPosY, 20, BLACK);
     DrawText(level, startPosX - MeasureText(level, 20) / 2, startPosY + 30, 20, BLACK);
